@@ -57,3 +57,31 @@ export interface SearchResult {
   subtitle: string
   description: string
 }
+
+export type RelationshipType =
+  | 'associated-with'
+  | 'participates-in'
+  | 'involves'
+  | 'treats'
+  | 'targets'
+
+export interface GraphNode {
+  id: string
+  type: BiomedicalEntityType
+  label: string
+  description?: string
+  metadata?: Record<string, unknown>
+}
+
+export interface GraphEdge {
+  id: string
+  source: string
+  target: string
+  relationship: RelationshipType
+  evidence?: EvidenceStrength
+}
+
+export interface KnowledgeGraph {
+  nodes: GraphNode[]
+  edges: GraphEdge[]
+}

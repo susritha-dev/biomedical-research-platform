@@ -217,6 +217,11 @@ export function Home() {
             Launch Research Explorer
             <ArrowRight size={18} />
           </Link>
+
+          <Link to="/graph" className="secondary-button">
+            View Knowledge Graph
+            <Network size={18} />
+          </Link>
         </section>
       </main>
 

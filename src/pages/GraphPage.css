@@ -1,0 +1,124 @@
+.kg-page {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  background: #fafaf7;
+}
+
+/* ── Header ──────────────────────────────────────────────────── */
+.kg-header {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 48px;
+  padding: 0 20px;
+  background: #fff;
+  border-bottom: 1px solid #e0e2d8;
+  z-index: 20;
+}
+
+.kg-header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.kg-header-brand {
+  font-family: 'Manrope', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  text-decoration: none;
+  color: #1a1c18;
+}
+
+.kg-header-sep {
+  color: #c0c2b8;
+  font-size: 14px;
+}
+
+.kg-header-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: #5a5d52;
+}
+
+.kg-header-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 500;
+  text-decoration: none;
+  color: #868a7f;
+  transition: color 140ms ease;
+}
+
+.kg-header-back:hover {
+  color: #1a1c18;
+}
+
+/* ── Main ────────────────────────────────────────────────────── */
+.kg-main {
+  flex: 1;
+  min-height: 0;
+  position: relative;
+  padding: 12px;
+}
+
+/* ── Footer ──────────────────────────────────────────────────── */
+.kg-footer {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 20px;
+  background: #fff;
+  border-top: 1px solid #e0e2d8;
+}
+
+.kg-footer-label {
+  font-family: 'Manrope', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #5a5d52;
+  flex-shrink: 0;
+}
+
+.kg-footer-note {
+  font-size: 11px;
+  line-height: 1.5;
+  color: #868a7f;
+}
+
+/* ── Responsive ──────────────────────────────────────────────── */
+@media (max-width: 620px) {
+  .kg-header {
+    height: 44px;
+    padding: 0 14px;
+  }
+
+  .kg-header-title {
+    display: none;
+  }
+
+  .kg-header-sep {
+    display: none;
+  }
+
+  .kg-main {
+    padding: 8px;
+  }
+
+  .kg-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    padding: 8px 14px;
+  }
+}
