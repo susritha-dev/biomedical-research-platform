@@ -1,6 +1,15 @@
 import { memo } from 'react'
 import { Handle, Position, type NodeProps } from '@xyflow/react'
-import { Dna, FlaskConical, GitBranch, Stethoscope } from 'lucide-react'
+import {
+  Activity,
+  Box,
+  Dna,
+  FlaskConical,
+  GitBranch,
+  Layers,
+  Microscope,
+  Stethoscope,
+} from 'lucide-react'
 import type { BiomedicalNodeData } from './graphAdapter'
 import { entityVisuals } from './entityConfig'
 
@@ -9,16 +18,20 @@ const iconMap = {
   gene: Dna,
   pathway: GitBranch,
   drug: FlaskConical,
+  phenotype: Activity,
+  anatomy: Box,
+  function: Layers,
+  variant: Microscope,
 } as const
 
 function BiomedicalNode({ data, selected }: NodeProps) {
   const nodeData = data as BiomedicalNodeData
-  const visual = entityVisuals[nodeData.entityType]
-  const Icon = iconMap[visual.icon]
+  const visual = entityVisuals(nodeData.entityType)
+  const Icon = iconMap[visual.icon as keyof typeof iconMap] ?? Layers
 
   return (
     <div
-      className={`kg-node ${selected ? 'kg-node--selected' : ''}`}
+      className={`kg-node ${selected ? 'kg-node--selected' : ''} ${nodeData.isCenter ? 'kg-node--center' : ''}`}
       style={{
         borderColor: selected ? visual.color : visual.border,
         background: visual.bg,

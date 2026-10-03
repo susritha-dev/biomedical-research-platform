@@ -9,7 +9,7 @@ export interface EntityVisualConfig {
   abbr: string
 }
 
-export const entityVisuals: Record<BiomedicalEntityType, EntityVisualConfig> = {
+const config: Record<BiomedicalEntityType, EntityVisualConfig> = {
   disease: {
     color: '#2563eb',
     bg: '#eff4ff',
@@ -42,6 +42,49 @@ export const entityVisuals: Record<BiomedicalEntityType, EntityVisualConfig> = {
     label: 'Drug',
     abbr: 'DRG',
   },
+  phenotype: {
+    color: '#dc2626',
+    bg: '#fef2f2',
+    border: '#fecaca',
+    icon: 'phenotype',
+    label: 'Phenotype',
+    abbr: 'PHN',
+  },
+  anatomy: {
+    color: '#0891b2',
+    bg: '#ecfeff',
+    border: '#a5f3fc',
+    icon: 'anatomy',
+    label: 'Anatomy',
+    abbr: 'ANA',
+  },
+  function: {
+    color: '#6b7280',
+    bg: '#f9fafb',
+    border: '#e5e7eb',
+    icon: 'function',
+    label: 'Function',
+    abbr: 'FNC',
+  },
+  variant: {
+    color: '#be185d',
+    bg: '#fdf2f8',
+    border: '#fbcfe8',
+    icon: 'variant',
+    label: 'Variant',
+    abbr: 'VAR',
+  },
+}
+
+export function entityVisuals(type: BiomedicalEntityType): EntityVisualConfig {
+  return config[type] ?? config.function
+}
+
+export function allEntityVisuals(): { type: BiomedicalEntityType; visual: EntityVisualConfig }[] {
+  return (Object.keys(config) as BiomedicalEntityType[]).map((type) => ({
+    type,
+    visual: config[type],
+  }))
 }
 
 export const relationshipLabels: Record<string, string> = {
@@ -50,6 +93,10 @@ export const relationshipLabels: Record<string, string> = {
   involves: 'involves',
   treats: 'treats',
   targets: 'targets',
+  'has-phenotype': 'has phenotype',
+  'expressed-in': 'expressed in',
+  causes: 'causes',
+  'related-to': 'related to',
 }
 
 export const evidenceStyles: Record<string, { stroke: string; width: number; dash?: string }> = {

@@ -49,6 +49,10 @@ export type BiomedicalEntityType =
   | 'gene'
   | 'drug'
   | 'pathway'
+  | 'phenotype'
+  | 'anatomy'
+  | 'function'
+  | 'variant'
 
 export interface SearchResult {
   id: string
@@ -64,6 +68,10 @@ export type RelationshipType =
   | 'involves'
   | 'treats'
   | 'targets'
+  | 'has-phenotype'
+  | 'expressed-in'
+  | 'causes'
+  | 'related-to'
 
 export interface GraphNode {
   id: string
@@ -79,9 +87,66 @@ export interface GraphEdge {
   target: string
   relationship: RelationshipType
   evidence?: EvidenceStrength
+  evidenceCodes?: string[]
+  primaryKnowledgeSource?: string
+  publications?: string[]
+  updateDate?: string
+}
+
+export interface AssociationDetail {
+  id: string
+  source: string
+  sourceLabel: string
+  sourceCategory: string
+  target: string
+  targetLabel: string
+  targetCategory: string
+  relationship: string
+  predicate: string
+  associationCategory: string
+  evidence?: EvidenceStrength
+  evidenceCodes: string[]
+  primaryKnowledgeSource: string
+  providedBy: string[]
+  publications: string[]
+  updateDate: string
+  createdDate: string
+  evidenceCount: number
 }
 
 export interface KnowledgeGraph {
   nodes: GraphNode[]
   edges: GraphEdge[]
+}
+
+export interface EntityNeighborhood {
+  center: GraphNode
+  nodes: GraphNode[]
+  edges: GraphEdge[]
+}
+
+export type DataProviderType = 'biolink' | 'mock'
+
+export interface BiomedicalDataProvider {
+  searchEntities(
+    query: string,
+    entityTypes?: BiomedicalEntityType[],
+    limit?: number,
+  ): Promise<SearchResult[]>
+
+  getEntityNeighborhood(
+    entityId: string,
+    depth?: number,
+  ): Promise<EntityNeighborhood>
+
+  getEntity(entityId: string): Promise<GraphNode | null>
+
+  getAssociation(associationId: string): Promise<AssociationDetail | null>
+}
+
+export interface GraphDataState {
+  data: KnowledgeGraph | null
+  loading: boolean
+  error: string | null
+  empty: boolean
 }

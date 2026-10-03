@@ -20,7 +20,7 @@ export function GraphDetailPanel({
   onClose,
 }: GraphDetailPanelProps) {
   if (!node) return null
-  const visual = entityVisuals[node.type]
+  const visual = entityVisuals(node.type)
   const meta = node.metadata ?? {}
 
   return (
@@ -59,7 +59,7 @@ export function GraphDetailPanel({
           </p>
           <ul className="kg-panel-conn-list">
             {connections.map((c, i) => {
-              const cv = entityVisuals[c.connectedType as keyof typeof entityVisuals]
+              const cv = entityVisuals(c.connectedType as never)
               return (
                 <li key={i} className="kg-panel-conn-item">
                   <span className="kg-panel-conn-rel">{c.relationship}</span>

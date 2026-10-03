@@ -1,0 +1,9 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/monarch/:path*",
+      "destination": "https://api-v3.monarchinitiative.org/v3/api/:path*"
+    },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}

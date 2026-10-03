@@ -1672,6 +1672,12 @@ function ResearchWorkspace({
     )
   }
 
+  function clearRelationshipContext() {
+    setSearchParams({})
+    setQuery('')
+    setSubmittedQuery('')
+  }
+
   return (
     <div className="helix-workspace">
       <style>

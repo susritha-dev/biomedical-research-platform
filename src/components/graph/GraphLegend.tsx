@@ -4,15 +4,22 @@ import { entityVisuals } from './entityConfig'
 interface GraphLegendProps {
   visibleTypes: Set<BiomedicalEntityType>
   onToggleType: (type: BiomedicalEntityType) => void
+  availableTypes?: BiomedicalEntityType[]
 }
 
-const ENTITY_TYPES: BiomedicalEntityType[] = ['disease', 'gene', 'pathway', 'drug']
+const DEFAULT_TYPES: BiomedicalEntityType[] = ['disease', 'gene', 'pathway', 'drug']
 
-export function GraphLegend({ visibleTypes, onToggleType }: GraphLegendProps) {
+export function GraphLegend({
+  visibleTypes,
+  onToggleType,
+  availableTypes,
+}: GraphLegendProps) {
+  const types = availableTypes ?? DEFAULT_TYPES
+
   return (
     <div className="kg-legend" role="group" aria-label="Entity type filters">
-      {ENTITY_TYPES.map((type) => {
-        const visual = entityVisuals[type]
+      {types.map((type) => {
+        const visual = entityVisuals(type)
         const isVisible = visibleTypes.has(type)
         return (
           <button
