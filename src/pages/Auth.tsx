@@ -23,13 +23,12 @@ import {
 
 import {
   Link,
+  Navigate,
   useNavigate,
+  useSearchParams,
 } from 'react-router-dom'
 
-import {
-  useSignIn,
-  useSignUp,
-} from '@clerk/react/legacy'
+import { useAuthSession } from '../auth/AuthSession'
 
 import './Auth.css'
 
@@ -40,24 +39,28 @@ type AuthMode =
 
 
 export function Auth() {
+  const { isLoaded, isSignedIn } = useAuthSession()
+
+  if (!isLoaded) {
+    return <div role="status">Loading account…</div>
+  }
+
+  if (isSignedIn) {
+    return <Navigate to="/explore" replace />
+  }
+
+  return <AuthForm />
+}
+
+function AuthForm() {
   const navigate =
     useNavigate()
-
-  const {
-    isLoaded:
-      signInLoaded,
-    signIn,
-    setActive:
-      setActiveSignIn,
-  } = useSignIn()
-
-  const {
-    isLoaded:
-      signUpLoaded,
-    signUp,
-    setActive:
-      setActiveSignUp,
-  } = useSignUp()
+  const [searchParams] = useSearchParams()
+  const requestedRedirect = searchParams.get('redirect')
+  const redirectTo = requestedRedirect?.startsWith('/') && !requestedRedirect.startsWith('//')
+    ? requestedRedirect
+    : '/explore'
+  const { signIn, signUp } = useAuthSession()
 
 
   const [
@@ -65,7 +68,7 @@ export function Auth() {
     setMode,
   ] =
     useState<AuthMode>(
-      'login',
+      searchParams.get('mode') === 'signup' ? 'signup' : 'login',
     )
 
   const [
@@ -124,7 +127,7 @@ export function Auth() {
   }
 
 
-  function getClerkErrorMessage(
+  function getAuthErrorMessage(
     error: unknown,
   ) {
     if (
@@ -166,132 +169,14 @@ export function Auth() {
 
 
   async function handleLogin() {
-    if (
-      !signInLoaded ||
-      !signIn
-    ) {
-      return
-    }
-
-
-    const result =
-      await signIn.create({
-        identifier:
-          email.trim(),
-
-        password,
-      })
-
-
-    if (
-      result.status ===
-      'complete'
-    ) {
-      await setActiveSignIn({
-        session:
-          result.createdSessionId,
-      })
-
-      navigate(
-        '/explore',
-      )
-
-      return
-    }
-
-
-    setMessage(
-      'Additional verification is required before sign-in can be completed.',
-    )
+    await signIn(email.trim(), password)
+    navigate(redirectTo, { replace: true })
   }
 
 
   async function handleSignup() {
-    if (
-      !signUpLoaded ||
-      !signUp
-    ) {
-      return
-    }
-
-
-    const cleanedName =
-      name.trim()
-
-
-    const nameParts =
-      cleanedName
-        .split(/\s+/)
-        .filter(Boolean)
-
-
-    const firstName =
-      nameParts[0] ?? ''
-
-
-    const lastName =
-      nameParts
-        .slice(1)
-        .join(' ')
-
-
-    const result =
-      await signUp.create({
-        emailAddress:
-          email.trim(),
-
-        password,
-
-        firstName:
-          firstName ||
-          undefined,
-
-        lastName:
-          lastName ||
-          undefined,
-      })
-
-
-    if (
-      result.status ===
-      'complete'
-    ) {
-      await setActiveSignUp({
-        session:
-          result.createdSessionId,
-      })
-
-      navigate(
-        '/explore',
-      )
-
-      return
-    }
-
-
-    if (
-      result.unverifiedFields.includes(
-        'email_address',
-      )
-    ) {
-      await signUp
-        .prepareEmailAddressVerification({
-          strategy:
-            'email_code',
-        })
-
-
-      setMessage(
-        'Account created. Check your email for the verification code.',
-      )
-
-      return
-    }
-
-
-    setMessage(
-      'Your account requires an additional verification step.',
-    )
+    await signUp(email.trim(), password, name.trim())
+    navigate(redirectTo, { replace: true })
   }
 
 
@@ -302,7 +187,6 @@ export function Auth() {
     event.preventDefault()
 
     setMessage('')
-
 
     if (
       !email.trim() ||
@@ -330,9 +214,7 @@ export function Auth() {
       }
 
 
-      if (
-        password.length < 8
-      ) {
+      if (password.length < 8) {
         setMessage(
           'Password must contain at least 8 characters.',
         )
@@ -367,49 +249,12 @@ export function Auth() {
       }
     } catch (error) {
       setMessage(
-        getClerkErrorMessage(
+        getAuthErrorMessage(
           error,
         ),
       )
     } finally {
       setLoading(false)
-    }
-  }
-
-
-  async function handleSocialLogin(
-    strategy:
-      | 'oauth_google'
-      | 'oauth_microsoft',
-  ) {
-    setMessage('')
-
-
-    if (
-      !signInLoaded ||
-      !signIn
-    ) {
-      return
-    }
-
-
-    try {
-      await signIn
-        .authenticateWithRedirect({
-          strategy,
-
-          redirectUrl:
-            '/auth/callback',
-
-          redirectUrlComplete:
-            '/explore',
-        })
-    } catch (error) {
-      setMessage(
-        getClerkErrorMessage(
-          error,
-        ),
-      )
     }
   }
 
@@ -743,7 +588,6 @@ export function Auth() {
 
               </label>
 
-
               <label className="auth-field">
 
                 <div className="auth-field-top">
@@ -881,9 +725,7 @@ export function Auth() {
                 type="submit"
                 className="auth-submit"
                 disabled={
-                  loading ||
-                  !signInLoaded ||
-                  !signUpLoaded
+                  loading
                 }
               >
 
@@ -909,60 +751,9 @@ export function Auth() {
             </form>
 
 
-            <div className="auth-divider">
-
-              <span />
-
-              <p>
-                OR
-              </p>
-
-              <span />
-
-            </div>
-
-
-            <button
-              type="button"
-              className="auth-google"
-              onClick={
-                () =>
-                  void handleSocialLogin(
-                    'oauth_google',
-                  )
-              }
-            >
-
-              <div className="google-mark">
-                G
-              </div>
-
-              Continue with Google
-
-            </button>
-
-
-            <button
-              type="button"
-              className="auth-google"
-              style={{
-                marginTop: '10px',
-              }}
-              onClick={
-                () =>
-                  void handleSocialLogin(
-                    'oauth_microsoft',
-                  )
-              }
-            >
-
-              <div className="google-mark">
-                M
-              </div>
-
-              Continue with Microsoft
-
-            </button>
+            <p className="auth-legal">
+              Accounts and projects stay in this browser with no server-side recovery or cross-device sync. This separates local users but is not server-verified identity; browser storage can be inspected or changed by someone with device access.
+            </p>
 
 
             <p className="auth-switch-copy">

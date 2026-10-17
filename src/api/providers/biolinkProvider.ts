@@ -86,10 +86,12 @@ interface MonarchAssociation {
 }
 
 function headers(): Record<string, string> {
-  return {
-    Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
-    'Content-Type': 'application/json',
-  }
+  return SUPABASE_ANON_KEY
+    ? {
+        Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+        'Content-Type': 'application/json',
+      }
+    : { 'Content-Type': 'application/json' }
 }
 
 function apiUrl(path: string): string {
@@ -245,7 +247,7 @@ export const biolinkProvider: BiomedicalDataProvider = {
 
       const response = await fetch(
         apiUrl(
-          `/entity/${encodeURIComponent(entityId)}/biolink%3AAssociation?limit=500`,
+          `/entity/${encodeURIComponent(entityId)}/biolink%3AAssociation?limit=100`,
         ),
         { headers: headers() },
       )

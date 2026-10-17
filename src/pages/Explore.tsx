@@ -2,7 +2,9 @@ import {
   ArrowLeft,
   BookOpen,
   Brain,
+  Check,
   FlaskConical,
+  FolderPlus,
   Home,
   LoaderCircle,
   Network,
@@ -12,6 +14,8 @@ import {
 
 import {
   useMemo,
+  useEffect,
+  useRef,
   useState,
 } from 'react'
 
@@ -22,18 +26,27 @@ import type {
 import {
   Link,
   useNavigate,
+  useParams,
+  useSearchParams,
 } from 'react-router-dom'
+import { useAuthSession } from '../auth/AuthSession'
 
 import { AgentResearchWorkspace } from '../components/AgentResearchWorkspace'
 import { EvidenceWorkspace } from '../components/EvidenceWorkspace'
 import { ResearchVisualization } from '../components/ResearchVisualization'
 import { generateResearchMap } from '../utils/generateResearchMap'
 import { analyzeResearchQuestion } from '../utils/researchIntelligence'
+import {
+  createResearchProject,
+  getResearchProject,
+  saveResearchProject,
+} from '../utils/researchProjectStorage'
 
 import type {
   ResearchMap,
   ResearchNode,
 } from '../types/researchMap'
+import type { ResearchWorkspaceTab } from '../types/researchProject'
 
 import './Explore.css'
 
@@ -42,6 +55,45 @@ type WorkspaceTab =
   | 'evidence'
   | 'visualize'
   | 'connections'
+
+interface GraphEvidenceContext {
+  sourceId: string
+  sourceLabel: string
+  sourceType: string
+  targetId: string
+  targetLabel: string
+  targetType: string
+  relationship: string
+  associationId: string
+  evidenceCodes: string[]
+  knowledgeSource: string
+  question: string
+}
+
+function readGraphEvidenceContext(params: URLSearchParams): GraphEvidenceContext | null {
+  const sourceLabel = params.get('sourceLabel')?.trim()
+  const targetLabel = params.get('targetLabel')?.trim()
+  const relationship = params.get('relationship')?.trim()
+  if (!sourceLabel || !targetLabel || !relationship) return null
+
+  const sourceType = params.get('sourceType')?.trim() ?? ''
+  const targetType = params.get('targetType')?.trim() ?? ''
+  const readableRelationship = relationship.replace(/-/g, ' ')
+
+  return {
+    sourceId: params.get('sourceId') ?? '',
+    sourceLabel,
+    sourceType,
+    targetId: params.get('targetId') ?? '',
+    targetLabel,
+    targetType,
+    relationship,
+    associationId: params.get('associationId') ?? '',
+    evidenceCodes: (params.get('evidenceCodes') ?? '').split(',').filter(Boolean),
+    knowledgeSource: params.get('knowledgeSource') ?? '',
+    question: `What evidence supports the relationship between ${sourceLabel} and ${targetLabel} (${readableRelationship})?`,
+  }
+}
 
 function createFallbackMap(question: string): ResearchMap {
   const fallbackMap = {
@@ -122,6 +174,7 @@ function createFallbackMap(question: string): ResearchMap {
         evidenceStrength: 'limited',
       },
     ],
+    sources: [],
   }
 
   return fallbackMap as unknown as ResearchMap
@@ -429,12 +482,113 @@ function ConnectionsView({
 
 export default function Explore() {
   const navigate = useNavigate()
+  const { projectId: routeProjectId } = useParams()
+  const [searchParams] = useSearchParams()
+  const { userId } = useAuthSession()
+  const graphContext = useMemo(
+    () => readGraphEvidenceContext(searchParams),
+    [searchParams],
+  )
+  const graphContextKey = graphContext?.associationId || (
+    graphContext
+      ? `${graphContext.sourceId}:${graphContext.targetId}:${graphContext.relationship}`
+      : ''
+  )
+  const startedGraphContext = useRef('')
 
-  const [question, setQuestion] = useState('')
+  const [question, setQuestion] = useState(graphContext?.question ?? '')
   const [map, setMap] = useState<ResearchMap | null>(null)
   const [activeTab, setActiveTab] = useState<WorkspaceTab>('agent')
+  const [currentProjectId, setCurrentProjectId] = useState<string | null>(null)
+  const [saveMessage, setSaveMessage] = useState('')
   const [isGenerating, setIsGenerating] = useState(false)
   const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (!graphContext || !graphContextKey || startedGraphContext.current === graphContextKey) return
+    startedGraphContext.current = graphContextKey
+    setQuestion(graphContext.question)
+    setActiveTab('evidence')
+    setIsGenerating(true)
+    setError(null)
+
+    try {
+      setMap(generateResearchMap(graphContext.question))
+    } catch (generationError) {
+      console.error('Graph relationship investigation failed:', generationError)
+      setMap(createFallbackMap(graphContext.question))
+    } finally {
+      setIsGenerating(false)
+    }
+  }, [graphContext, graphContextKey])
+
+  useEffect(() => {
+    if (!routeProjectId || !userId) {
+      setCurrentProjectId(null)
+      return
+    }
+
+    const project = getResearchProject(routeProjectId, userId)
+    if (!project) {
+      navigate('/projects', { replace: true })
+      return
+    }
+
+    setCurrentProjectId(project.id)
+    setQuestion(project.question)
+    setMap(project.researchMap)
+    setActiveTab(project.activeTab ?? 'agent')
+  }, [navigate, routeProjectId, userId])
+
+  useEffect(() => {
+    if (!map || !currentProjectId || !userId) return
+    saveResearchProject({
+      userId,
+      projectId: currentProjectId,
+      map,
+      expandedNodeIds: [],
+      activeTab,
+    })
+  }, [activeTab, currentProjectId, map, userId])
+
+  function saveProject(mapToSave: ResearchMap, tab: ResearchWorkspaceTab = activeTab) {
+    if (!userId) return
+
+    const project = currentProjectId
+      ? saveResearchProject({
+          userId,
+          projectId: currentProjectId,
+          map: mapToSave,
+          expandedNodeIds: [],
+          activeTab: tab,
+        })
+      : createResearchProject({
+          userId,
+          map: mapToSave,
+          expandedNodeIds: [],
+          activeTab: tab,
+        })
+
+    if (!project) {
+      setError('This saved project is no longer available in your account.')
+      return
+    }
+
+    setCurrentProjectId(project.id)
+    setSaveMessage('Saved to Projects')
+    if (routeProjectId !== project.id) {
+      navigate(`/explore/${project.id}`, { replace: true })
+    }
+  }
+
+  function saveQuestion() {
+    const cleanedQuestion = question.trim()
+    if (!cleanedQuestion) return
+    const questionMap = createFallbackMap(cleanedQuestion)
+    setMap(questionMap)
+    setActiveTab('agent')
+    saveProject(questionMap, 'agent')
+  }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -454,6 +608,15 @@ export default function Explore() {
 
       setMap(generatedMap)
       setActiveTab('agent')
+      if (currentProjectId && userId) {
+        saveResearchProject({
+          userId,
+          projectId: currentProjectId,
+          map: generatedMap,
+          expandedNodeIds: [],
+          activeTab: 'agent',
+        })
+      }
     } catch (generationError) {
       console.error('Research map generation failed:', generationError)
 
@@ -465,10 +628,13 @@ export default function Explore() {
   }
 
   function startNewQuestion() {
+    setCurrentProjectId(null)
+    setSaveMessage('')
     setQuestion('')
     setMap(null)
     setActiveTab('agent')
     setError(null)
+    if (routeProjectId || graphContext) navigate('/explore', { replace: true })
   }
 
   if (!map) {
@@ -494,6 +660,7 @@ export default function Explore() {
         </header>
 
         <section className="helix-explore-entry-center">
+          {graphContext && <GraphContextBanner context={graphContext} />}
           <div className="helix-explore-kicker">
             <Sparkles size={16} />
 
@@ -541,6 +708,16 @@ export default function Explore() {
                   Start investigation
                 </>
               )}
+            </button>
+
+            <button
+              type="button"
+              className="helix-explore-save-question"
+              onClick={saveQuestion}
+              disabled={!question.trim()}
+            >
+              <FolderPlus size={17} />
+              Save question to Projects
             </button>
           </form>
 
@@ -609,6 +786,15 @@ export default function Explore() {
           >
             Projects
           </button>
+
+          <button
+            type="button"
+            onClick={() => map && saveProject(map)}
+          >
+            {currentProjectId ? <Check size={16} /> : <FolderPlus size={16} />}
+            {currentProjectId ? 'Save changes' : 'Save to Projects'}
+          </button>
+          {saveMessage && <span role="status">{saveMessage}</span>}
         </div>
 
         <nav className="helix-explore-tabs">
@@ -655,6 +841,7 @@ export default function Explore() {
       </header>
 
       <section className="helix-explore-content">
+        {graphContext && <GraphContextBanner context={graphContext} />}
         {activeTab === 'agent' && (
           <AgentResearchWorkspace
             map={map}
@@ -683,5 +870,25 @@ export default function Explore() {
         )}
       </section>
     </main>
+  )
+}
+
+function GraphContextBanner({ context }: { context: GraphEvidenceContext }) {
+  return (
+    <aside className="helix-graph-evidence-context" aria-label="Relationship from knowledge graph">
+      <span>From Knowledge Graph</span>
+      <strong>
+        {context.sourceLabel}{context.sourceType ? ` (${context.sourceType})` : ''}
+        {' '}{context.relationship.replace(/-/g, ' ')}{' '}
+        {context.targetLabel}{context.targetType ? ` (${context.targetType})` : ''}
+      </strong>
+      {(context.evidenceCodes.length > 0 || context.knowledgeSource) && (
+        <small>
+          {context.evidenceCodes.length > 0 && `Evidence codes: ${context.evidenceCodes.join(', ')}`}
+          {context.evidenceCodes.length > 0 && context.knowledgeSource && ' · '}
+          {context.knowledgeSource && `Knowledge source: ${context.knowledgeSource}`}
+        </small>
+      )}
+    </aside>
   )
 }

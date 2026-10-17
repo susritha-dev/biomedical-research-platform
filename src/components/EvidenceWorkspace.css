@@ -210,10 +210,18 @@
 
 .helix-source-card-top {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: 14px;
   margin-bottom: 13px;
+}
+
+.helix-source-assessment {
+  margin: 10px 0 0;
+  color: #687066;
+  font-size: 11px;
+  line-height: 1.5;
 }
 
 .helix-source-year {

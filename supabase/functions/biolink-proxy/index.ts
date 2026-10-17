@@ -342,7 +342,7 @@ async function handleNeighborhood(
 
   const visited = new Set<string>();
   let frontier = [entityId];
-  const assocLimit = 25;
+  const assocLimit = 100;
 
   for (let hop = 0; hop < maxDepth; hop++) {
     const nextFrontier: string[] = [];
@@ -353,7 +353,7 @@ async function handleNeighborhood(
 
       try {
         const assocData = (await monarchFetch(
-          `/entity/${encodeURIComponent(currentId)}/associations?limit=${assocLimit}`,
+          `/entity/${encodeURIComponent(currentId)}/biolink%3AAssociation?limit=${assocLimit}`,
         )) as MonarchAssociationResponse;
 
         for (const assoc of assocData.items ?? []) {

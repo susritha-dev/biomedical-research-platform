@@ -24,6 +24,7 @@ import type {
   ResearchMap,
   ResearchNode,
 } from '../types/researchMap'
+import { assessEvidence } from '../utils/evidenceQuality'
 
 import './EvidenceWorkspace.css'
 
@@ -66,10 +67,6 @@ function cleanQuestion(question: string) {
     .trim()
 }
 
-function getApiBaseUrl() {
-  return 'http://localhost:3001'
-}
-
 function getEvidenceLabel(strength: EvidenceStrength) {
   if (!strength || strength === 'unknown') {
     return 'Needs verification'
@@ -107,6 +104,19 @@ function getEvidenceClass(strength: EvidenceStrength) {
     return 'helix-evidence-status-weak'
   }
 
+  return 'helix-evidence-status-unknown'
+}
+
+function getAssessmentClass(level: string) {
+  if (level === 'high' || level === 'strong') {
+    return 'helix-evidence-status-strong'
+  }
+  if (level === 'moderate') {
+    return 'helix-evidence-status-moderate'
+  }
+  if (level === 'limited' || level === 'low') {
+    return 'helix-evidence-status-weak'
+  }
   return 'helix-evidence-status-unknown'
 }
 
@@ -220,10 +230,8 @@ export function EvidenceWorkspace({
       setArticles([])
 
       try {
-        const apiBaseUrl = getApiBaseUrl()
-
         const url =
-          `${apiBaseUrl}/api/evidence?q=${encodeURIComponent(evidenceQuery)}`
+          `/api/evidence?q=${encodeURIComponent(evidenceQuery)}`
 
         console.log('Loading evidence from:', url)
 
@@ -283,10 +291,9 @@ export function EvidenceWorkspace({
             </h2>
 
             <p>
-              Helix sends the research question to your backend, searches
-              scholarly metadata sources, and displays article titles,
-              authors, journals, years, abstracts, citations, DOIs, and
-              source links directly inside the app.
+              Helix searches NLM PubMed and public scholarly indexes, then
+              reports source traceability separately from study design.
+              Indexed records are candidates to review, not proof of a claim.
             </p>
           </div>
 
@@ -395,7 +402,7 @@ export function EvidenceWorkspace({
                 <div className="helix-evidence-loading">
                   <LoaderCircle className="helix-spinner" size={18} />
 
-                  Searching Semantic Scholar, OpenAlex, and Crossref...
+                    Searching NLM PubMed, Semantic Scholar, OpenAlex, and Crossref...
                 </div>
               )
             }
@@ -410,8 +417,7 @@ export function EvidenceWorkspace({
                   <p>
                     {
                       apiError
-                    } Make sure your backend terminal is still running
-                    and that this link works: http://localhost:3001/api/health
+                    } Check that the evidence API is reachable and try again.
                   </p>
                 </div>
               )
@@ -438,18 +444,31 @@ export function EvidenceWorkspace({
 
             <div className="helix-source-grid">
               {
-                articles.map((article) => (
-                  <article
-                    key={article.id}
-                    className="helix-source-card"
-                  >
+                articles.map((article) => {
+                  const assessment = assessEvidence(article)
+                  return (
+                    <article
+                      key={article.id}
+                      className="helix-source-card"
+                    >
                     <div className="helix-source-card-top">
-                      <span className="helix-evidence-status-pill helix-evidence-status-strong">
+                      <span className="helix-evidence-status-pill helix-evidence-status-unknown">
                         <Database size={15} />
+                        {article.provider}
+                      </span>
 
-                        {
-                          article.provider
-                        }
+                      <span
+                        className={`helix-evidence-status-pill ${getAssessmentClass(assessment.sourceCredibility)}`}
+                        title={assessment.sourceReason}
+                      >
+                        Source: {assessment.sourceLabel}
+                      </span>
+
+                      <span
+                        className={`helix-evidence-status-pill ${getAssessmentClass(assessment.strength)}`}
+                        title={assessment.strengthReason}
+                      >
+                        Evidence: {assessment.strengthLabel}
                       </span>
 
                       <span className="helix-source-year">
@@ -478,12 +497,14 @@ export function EvidenceWorkspace({
                         }
                       </span>
 
-                      <span>
-                        {
-                          article.citationCount
-                        } citations
-                      </span>
+                      {article.citationCount > 0 && (
+                        <span>{article.citationCount} citations</span>
+                      )}
                     </div>
+
+                    <p className="helix-source-assessment">
+                      {assessment.sourceReason} {assessment.strengthReason}
+                    </p>
 
                     <p className="helix-source-authors">
                       {
@@ -560,8 +581,9 @@ export function EvidenceWorkspace({
                         )
                       }
                     </div>
-                  </article>
-                ))
+                    </article>
+                  )
+                })
               }
             </div>
 
@@ -679,12 +701,12 @@ export function EvidenceWorkspace({
 
                   <div>
                     <strong>
-                      Prefer reviews and highly cited papers
+                      Compare the study design and source
                     </strong>
 
                     <p>
-                      Use citation count, source name, year, and article
-                      type to decide which papers are best starting points.
+                      Citation counts can help discover papers, but do not
+                      establish quality or whether a paper supports the claim.
                     </p>
                   </div>
                 </article>

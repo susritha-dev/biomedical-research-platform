@@ -13,13 +13,14 @@ import {
   import {
     ProjectCard,
   } from '../components/ProjectCard'
+  import { useAuthSession } from '../auth/AuthSession'
   
-  import {
-    clearActiveProjectId,
-    deleteResearchProject,
-    getResearchProjectSummaries,
-    renameResearchProject,
-    setActiveProjectId,
+import {
+  clearActiveProjectId,
+  deleteResearchProject,
+  getResearchProjectSummaries,
+  renameResearchProject,
+  setActiveProjectId,
   } from '../utils/researchProjectStorage'
   
   import {
@@ -36,6 +37,8 @@ import {
   export function Projects() {
     const navigate =
       useNavigate()
+    const { userId } = useAuthSession()
+    const accountId = userId ?? ''
   
     const [
       search,
@@ -53,7 +56,7 @@ import {
         ResearchProjectSummary[]
       >(
         () =>
-          getResearchProjectSummaries(),
+          getResearchProjectSummaries(accountId),
       )
   
     const filteredProjects =
@@ -94,7 +97,7 @@ import {
   
     function refreshProjects() {
       setProjects(
-        getResearchProjectSummaries(),
+        getResearchProjectSummaries(accountId),
       )
     }
   
@@ -104,6 +107,7 @@ import {
     ) {
       setActiveProjectId(
         project.id,
+        accountId,
       )
   
       navigate(
@@ -112,7 +116,7 @@ import {
     }
   
     function startNewProject() {
-      clearActiveProjectId()
+      clearActiveProjectId(accountId)
   
       navigate(
         '/explore',
@@ -139,6 +143,7 @@ import {
       renameResearchProject(
         project.id,
         title,
+        accountId,
       )
   
       refreshProjects()
@@ -150,7 +155,7 @@ import {
     ) {
       const confirmed =
         window.confirm(
-          `Delete "${project.title}"? This only removes it from this browser.`,
+          `Delete "${project.title}" from this account on this browser?`,
         )
   
       if (
@@ -161,6 +166,7 @@ import {
   
       deleteResearchProject(
         project.id,
+        accountId,
       )
   
       refreshProjects()
@@ -303,8 +309,8 @@ import {
                   </h2>
   
                   <p>
-                    Start a research question and Helix will save the
-                    project locally so you can return to it later.
+                    Save a research question or investigation from
+                    Research Explorer to continue it later.
                   </p>
   
                   <button
@@ -322,4 +328,3 @@ import {
       </div>
     )
   }
-  

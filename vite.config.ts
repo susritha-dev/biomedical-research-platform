@@ -8,5 +8,16 @@ export default defineConfig({
   server: {
     port: 5173,
     host: true,
+    proxy: {
+      '/api/monarch': {
+        target: 'https://api-v3.monarchinitiative.org',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/monarch/, '/v3/api'),
+      },
+      '/api/evidence': {
+        target: 'http://localhost:3001',
+        changeOrigin: true,
+      },
+    },
   },
 })

@@ -1,5 +1,9 @@
 # React + TypeScript + Vite
 
+## Local accounts and saved projects
+
+Sign-up and login work without an API key or external auth provider. Account records and projects are stored in browser `localStorage`, partitioned by a generated local account ID. They are available only in the same browser and are not synced or recoverable across devices. This is local account separation, not server-verified identity; anyone with access to browser storage can inspect or alter records.
+
 This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
 
 Currently, two official plugins are available:

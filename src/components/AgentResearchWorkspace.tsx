@@ -22,6 +22,7 @@ import type {
 import {
   analyzeResearchQuestion,
 } from '../utils/researchIntelligence'
+import { assessEvidence } from '../utils/evidenceQuality'
 
 import './AgentResearchWorkspace.css'
 
@@ -69,10 +70,6 @@ const stageOrder: AgentStage[] = [
   'tests',
   'summary',
 ]
-
-function getApiBaseUrl() {
-  return 'http://localhost:3001'
-}
 
 function getTopArticle(articles: EvidenceArticle[]) {
   return [...articles].sort(
@@ -178,6 +175,9 @@ export function AgentResearchWorkspace({
   const mechanisms = researchAnalysis.mechanisms
   const connections = researchAnalysis.connections
   const topArticle = getTopArticle(articles)
+  const topArticleAssessment = topArticle
+    ? assessEvidence(topArticle)
+    : null
   const bestMechanism = mechanisms[0]
   const bestConnection = connections[0]
   const progress = getStageProgress(stage)
@@ -191,7 +191,7 @@ export function AgentResearchWorkspace({
 
       try {
         const response = await fetch(
-          `${getApiBaseUrl()}/api/evidence?q=${encodeURIComponent(evidenceQuery)}`,
+          `/api/evidence?q=${encodeURIComponent(evidenceQuery)}`,
         )
 
         if (!response.ok) {
@@ -560,6 +560,14 @@ export function AgentResearchWorkspace({
                         {topArticle.provider} · {topArticle.year} ·{' '}
                         {topArticle.citationCount} citations
                       </span>
+
+                      {topArticleAssessment && (
+                        <p>
+                          Source: {topArticleAssessment.sourceLabel}.{' '}
+                          Evidence: {topArticleAssessment.strengthLabel}.{' '}
+                          {topArticleAssessment.strengthReason}
+                        </p>
+                      )}
 
                       <h3>
                         {topArticle.title}

@@ -1,4 +1,6 @@
 import {
+  lazy,
+  Suspense,
   useMemo,
   useState,
 } from 'react'
@@ -34,6 +36,10 @@ import {
 } from './pages/Home'
 
 import Explore from './pages/Explore'
+import { Auth } from './pages/Auth'
+import { AuthCallback } from './pages/AuthCallback'
+import { Projects } from './pages/Projects'
+import { useAuthSession } from './auth/AuthSession'
 
 import './App.css'
 
@@ -99,6 +105,12 @@ interface DiscoveryEdge {
 
 const PROJECTS_KEY =
   'helix.researchProjects.v1'
+
+const GraphPage = lazy(() =>
+  import('./pages/GraphPage').then(({ GraphPage }) => ({
+    default: GraphPage,
+  })),
+)
 
 const ACTIVE_PROJECT_ID_KEY =
   'helix.activeProjectId.v1'
@@ -543,37 +555,59 @@ function AppRoutes() {
       />
 
       <Route
+        path="/auth"
+        element={<Auth />}
+      />
+
+      <Route
+        path="/auth/callback"
+        element={<AuthCallback />}
+      />
+
+      <Route
         path="/explore"
         element={
-          <Explore />
+          <RequireAuthentication>
+            <Explore />
+          </RequireAuthentication>
         }
       />
 
       <Route
         path="/explore/:projectId"
         element={
-          <Explore />
+          <RequireAuthentication>
+            <Explore />
+          </RequireAuthentication>
         }
       />
 
       <Route
         path="/projects"
         element={
-          <ProjectsPage />
+          <RequireAuthentication>
+            <Projects />
+          </RequireAuthentication>
         }
       />
 
       <Route
         path="/graph"
         element={
-          <DiscoveryGraphPage />
+          <RequireAuthentication>
+            <Suspense fallback={<div role="status">Loading knowledge graph…</div>}>
+              <GraphPage />
+            </Suspense>
+          </RequireAuthentication>
         }
       />
 
       <Route
         path="/hypotheses"
         element={
-          <HypothesesPage />
+          <RequireAuthentication>
+            <HypothesesPage />
+          </RequireAuthentication>
         }
       />
 
@@ -588,6 +622,27 @@ function AppRoutes() {
       />
     </Routes>
   )
+}
+
+function RequireAuthentication({ children }: { children: React.ReactNode }) {
+  const { isLoaded, isSignedIn } = useAuthSession()
+  const location = useLocation()
+
+  if (!isLoaded) {
+    return <div role="status">Checking your account…</div>
+  }
+
+  if (!isSignedIn) {
+    const destination = `${location.pathname}${location.search}${location.hash}`
+    return (
+      <Navigate
+        to={`/auth?redirect=${encodeURIComponent(destination)}`}
+        replace
+      />
+    )
+  }
+
+  return <>{children}</>
 }
 
 function ExploreProjectsShortcut() {
@@ -668,7 +723,7 @@ function ExploreProjectsShortcut() {
   )
 }
 
-function ProjectsPage() {
+export function ProjectsPage() {
   const navigate =
     useNavigate()
 
@@ -1386,7 +1441,7 @@ function ProjectsPage() {
   )
 }
 
-function DiscoveryGraphPage() {
+export function DiscoveryGraphPage() {
   const navigate =
     useNavigate()
 

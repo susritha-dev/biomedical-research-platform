@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import type {
   EntityNeighborhood,
   KnowledgeGraph,
@@ -6,6 +6,7 @@ import type {
 } from '../types/biomedical'
 import { createDataProvider } from '../api/providers'
 import type { DataProviderType } from '../types/biomedical'
+import { getFullGraph } from '../api/graphApi'
 
 interface UseGraphDataState {
   graph: KnowledgeGraph | null
@@ -20,11 +21,10 @@ interface UseGraphDataState {
 
 export function useGraphData(providerType: DataProviderType = 'biolink') {
   const provider = useRef(createDataProvider(providerType)).current
-  const initialProvider = useRef(createDataProvider('mock')).current
 
   const [state, setState] = useState<UseGraphDataState>({
-    graph: null,
-    loading: true,
+    graph: getFullGraph(),
+    loading: false,
     error: null,
     empty: false,
     searchResults: [],
@@ -110,59 +110,10 @@ export function useGraphData(providerType: DataProviderType = 'biolink') {
     }))
   }, [])
 
-  const loadDefaultGraph = useCallback(async () => {
-    setState((s) => ({
-      ...s,
-      loading: true,
-      error: null,
-      empty: false,
-    }))
-
-    try {
-      const results = await initialProvider.searchEntities('ALS', undefined, 1)
-      if (results.length === 0) {
-        setState((s) => ({
-          ...s,
-          graph: null,
-          loading: false,
-          empty: true,
-          error: null,
-        }))
-        return
-      }
-      const hood = await initialProvider.getEntityNeighborhood(results[0].id, 1)
-      const graph: KnowledgeGraph = {
-        nodes: [hood.center, ...hood.nodes.filter((n) => n.id !== hood.center.id)],
-        edges: hood.edges,
-      }
-      setState((s) => ({
-        ...s,
-        graph,
-        loading: false,
-        centerEntityId: results[0].id,
-        empty: graph.nodes.length <= 1 && graph.edges.length === 0,
-      }))
-    } catch (err) {
-      const message =
-        err instanceof Error ? err.message : 'Failed to load initial data'
-      setState((s) => ({
-        ...s,
-        graph: null,
-        loading: false,
-        error: message,
-      }))
-    }
-  }, [initialProvider])
-
-  useEffect(() => {
-    loadDefaultGraph()
-  }, [loadDefaultGraph])
-
   return {
     ...state,
     loadNeighborhood,
     search,
     clearSearch,
-    loadDefaultGraph,
   }
 }

@@ -53,7 +53,17 @@ import type {
     )}...`
   }
   
-  function readProjects() {
+  function projectsStorageKey(userId: string) {
+    return `${PROJECTS_KEY}:${encodeURIComponent(userId)}`
+  }
+
+  function activeProjectStorageKey(userId: string) {
+    return `${ACTIVE_PROJECT_ID_KEY}:${encodeURIComponent(userId)}`
+  }
+
+  function readProjects(userId: string) {
+    if (!userId) return []
+
     if (
       !canUseStorage()
     ) {
@@ -63,7 +73,7 @@ import type {
     try {
       const raw =
         window.localStorage.getItem(
-          PROJECTS_KEY,
+          projectsStorageKey(userId),
         )
   
       if (
@@ -94,6 +104,8 @@ import type {
             1 &&
           typeof project.id ===
             'string' &&
+          project.ownerId ===
+            userId &&
           Boolean(
             project.researchMap,
           ),
@@ -104,17 +116,19 @@ import type {
   }
   
   function writeProjects(
+    userId: string,
     projects:
       ResearchProject[],
   ) {
     if (
+      !userId ||
       !canUseStorage()
     ) {
       return
     }
   
     window.localStorage.setItem(
-      PROJECTS_KEY,
+      projectsStorageKey(userId),
       JSON.stringify(
         projects,
       ),
@@ -165,8 +179,8 @@ import type {
     }
   }
   
-  export function getResearchProjects() {
-    return readProjects().sort(
+  export function getResearchProjects(userId: string) {
+    return readProjects(userId).sort(
       (
         a,
         b,
@@ -180,8 +194,8 @@ import type {
     )
   }
   
-  export function getResearchProjectSummaries() {
-    return getResearchProjects().map(
+  export function getResearchProjectSummaries(userId: string) {
+    return getResearchProjects(userId).map(
       summarizeProject,
     )
   }
@@ -189,9 +203,10 @@ import type {
   export function getResearchProject(
     projectId:
       string,
+    userId: string,
   ) {
     return (
-      readProjects().find(
+      readProjects(userId).find(
         (
           project,
         ) =>
@@ -202,57 +217,67 @@ import type {
     )
   }
   
-  export function getActiveProjectId() {
+  export function getActiveProjectId(userId: string) {
     if (
+      !userId ||
       !canUseStorage()
     ) {
       return null
     }
   
     return window.localStorage.getItem(
-      ACTIVE_PROJECT_ID_KEY,
+      activeProjectStorageKey(userId),
     )
   }
   
   export function setActiveProjectId(
     projectId:
       string,
+    userId: string,
   ) {
     if (
+      !userId ||
       !canUseStorage()
     ) {
       return
     }
   
     window.localStorage.setItem(
-      ACTIVE_PROJECT_ID_KEY,
+      activeProjectStorageKey(userId),
       projectId,
     )
   }
   
-  export function clearActiveProjectId() {
+  export function clearActiveProjectId(userId: string) {
     if (
+      !userId ||
       !canUseStorage()
     ) {
       return
     }
   
     window.localStorage.removeItem(
-      ACTIVE_PROJECT_ID_KEY,
+      activeProjectStorageKey(userId),
     )
   }
   
   export function createResearchProject({
+    userId,
     map,
     expandedNodeIds =
       [],
+    activeTab = 'agent',
     title,
   }: {
+    userId: string
+
     map:
       ResearchMap
   
     expandedNodeIds?:
       string[]
+
+    activeTab?: ResearchProject['activeTab']
   
     title?:
       string
@@ -267,6 +292,9 @@ import type {
   
         id:
           makeProjectId(),
+
+        ownerId:
+          userId,
   
         title:
           title ??
@@ -281,6 +309,8 @@ import type {
           map,
   
         expandedNodeIds,
+
+        activeTab,
   
         createdAt:
           now,
@@ -290,25 +320,30 @@ import type {
       }
   
     const projects =
-      readProjects()
+      readProjects(userId)
   
-    writeProjects([
+    writeProjects(userId, [
       project,
       ...projects,
     ])
   
     setActiveProjectId(
       project.id,
+      userId,
     )
   
     return project
   }
   
   export function saveResearchProject({
+    userId,
     projectId,
     map,
     expandedNodeIds,
+    activeTab,
   }: {
+    userId: string
+
     projectId:
       string
   
@@ -317,9 +352,11 @@ import type {
   
     expandedNodeIds:
       string[]
+
+    activeTab?: ResearchProject['activeTab']
   }) {
     const projects =
-      readProjects()
+      readProjects(userId)
   
     const existing =
       projects.find(
@@ -347,12 +384,16 @@ import type {
           map,
   
         expandedNodeIds,
+
+        activeTab:
+          activeTab ?? existing.activeTab,
   
         updatedAt:
           new Date().toISOString(),
       }
   
     writeProjects(
+      userId,
       projects.map(
         (
           project,
@@ -373,6 +414,7 @@ import type {
   
     title:
       string,
+    userId: string,
   ) {
     const cleaned =
       title.trim()
@@ -384,7 +426,7 @@ import type {
     }
   
     const projects =
-      readProjects()
+      readProjects(userId)
   
     const existing =
       projects.find(
@@ -413,6 +455,7 @@ import type {
       }
   
     writeProjects(
+      userId,
       projects.map(
         (
           project,
@@ -430,11 +473,13 @@ import type {
   export function deleteResearchProject(
     projectId:
       string,
+    userId: string,
   ) {
     const projects =
-      readProjects()
+      readProjects(userId)
   
     writeProjects(
+      userId,
       projects.filter(
         (
           project,
@@ -445,10 +490,10 @@ import type {
     )
   
     if (
-      getActiveProjectId() ===
+      getActiveProjectId(userId) ===
       projectId
     ) {
-      clearActiveProjectId()
+      clearActiveProjectId(userId)
     }
   }
   

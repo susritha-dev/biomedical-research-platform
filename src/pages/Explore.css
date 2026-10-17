@@ -52,6 +52,41 @@
   justify-content: center;
 }
 
+.helix-graph-evidence-context {
+  display: grid;
+  gap: 5px;
+  margin: 0 auto 18px;
+  padding: 12px 14px;
+  border-left: 3px solid #3157d5;
+  background: rgba(255, 253, 247, 0.88);
+  color: #30332d;
+}
+
+.helix-graph-evidence-context > span {
+  color: #4358a0;
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.helix-graph-evidence-context strong {
+  font-size: 13px;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.helix-graph-evidence-context small {
+  color: #686b63;
+  font-size: 11px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.helix-explore-content > .helix-graph-evidence-context {
+  width: min(1220px, calc(100% - 36px));
+  margin: 14px auto 0;
+}
+
 .helix-explore-kicker {
   display: inline-flex;
   align-items: center;
@@ -127,6 +162,13 @@
 .helix-explore-form button:disabled {
   opacity: 0.72;
   cursor: wait;
+}
+
+.helix-explore-form .helix-explore-save-question {
+  margin-top: 8px;
+  border: 1px solid #ded9cc;
+  background: transparent;
+  color: #30332d;
 }
 
 .helix-explore-error {

@@ -10,8 +10,11 @@ import {
 import {
   Link,
 } from 'react-router-dom'
+import { useAuthSession } from '../auth/AuthSession'
 
 export function Navbar() {
+  const { isSignedIn, signOut } = useAuthSession()
+
   return (
     <header className="navbar helix-premium-navbar">
       <style>
@@ -189,14 +192,24 @@ export function Navbar() {
           </Link>
         </nav>
 
-        <Link
-          to="/explore"
-          className="nav-cta"
-        >
-          Launch Explorer
+        {isSignedIn ? (
+          <button
+            type="button"
+            className="nav-cta"
+            onClick={() => void signOut()}
+          >
+            Sign out
+          </button>
+        ) : (
+          <Link
+            to="/auth"
+            className="nav-cta"
+          >
+            Log in / Sign up
 
-          <ArrowUpRight size={16} />
-        </Link>
+            <ArrowUpRight size={16} />
+          </Link>
+        )}
       </div>
     </header>
   )
