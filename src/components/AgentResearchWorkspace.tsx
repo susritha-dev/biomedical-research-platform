@@ -701,104 +701,54 @@ export function AgentResearchWorkspace({
           )}
 
           {stage === 'summary' && (
-            <article className="helix-agent-panel helix-agent-panel-large">
-              <span className="helix-agent-label">
-                Final research readout
-              </span>
-
-              <h2>
-                {bestMechanism?.title}
-              </h2>
-
-              <p>
-                {bestMechanism?.summary}
-              </p>
-
-              <div className="helix-agent-grid">
-                <div>
-                  <span>
-                    Papers found
-                  </span>
-
-                  <strong>
-                    {articles.length}
-                  </strong>
-                </div>
-
-                <div>
-                  <span>
-                    Mechanisms generated
-                  </span>
-
-                  <strong>
-                    {mechanisms.length}
-                  </strong>
-                </div>
-
-                <div>
-                  <span>
-                    Reliability
-                  </span>
-
-                  <strong>
-                    {formatReliability(researchAnalysis.reliability)}
-                  </strong>
-                </div>
-
-                <div>
-                  <span>
-                    Best confidence
-                  </span>
-
-                  <strong>
-                    {bestMechanism?.confidence ?? 0}%
-                  </strong>
-                </div>
+            <div className="helix-results-dashboard">
+              <div className="helix-results-welcome">
+                <span className="helix-agent-label"><CheckCircle2 size={15} /> Investigation overview</span>
+                <h2>Research overview</h2>
+                <p>{map.question}</p>
               </div>
 
-              <div className="helix-agent-grid">
-                {researchAnalysis.limitations.map((limitation) => (
-                  <div key={limitation}>
-                    <span>
-                      Reliability note
-                    </span>
+              <div className="helix-results-stats" aria-label="Research summary metrics">
+                <div><span>Candidate papers</span><strong>{articles.length}</strong></div>
+                <div><span>Potential mechanisms</span><strong>{mechanisms.length}</strong></div>
+                <div><span>Connections explored</span><strong>{connections.length}</strong></div>
+                <div><span>Analysis reliability</span><strong>{formatReliability(researchAnalysis.reliability)}</strong></div>
+              </div>
 
-                    <strong>
-                      {limitation}
-                    </strong>
+              <div className="helix-results-main-grid">
+                <section className="helix-results-card helix-results-finding">
+                  <span className="helix-agent-label">Featured hypothesis · requires verification</span>
+                  <h3>{bestMechanism?.title || 'No specific mechanism identified'}</h3>
+                  <p>{bestMechanism?.summary || 'Inspect the evidence and research map to develop a more specific hypothesis.'}</p>
+                  <small>Computationally suggested, not a validated scientific conclusion.</small>
+                </section>
+                <section className="helix-results-card">
+                  <span className="helix-agent-label">Explore your results</span>
+                  <div className="helix-results-links">
+                    <button type="button" onClick={onOpenEvidence}>
+                      <BookOpen size={19} /><span><strong>Scientific evidence</strong><small>Review publications and sources</small></span><ArrowRight size={17} />
+                    </button>
+                    <button type="button" onClick={onOpenModel}>
+                      <Beaker size={19} /><span><strong>Biological model</strong><small>Explore an educational visualization</small></span><ArrowRight size={17} />
+                    </button>
+                    <button type="button" onClick={onOpenConnections}>
+                      <Network size={19} /><span><strong>Research connections</strong><small>Inspect linked concepts and claims</small></span><ArrowRight size={17} />
+                    </button>
                   </div>
-                ))}
+                </section>
               </div>
 
-              <div className="helix-agent-actions">
-                <button
-                  type="button"
-                  onClick={onOpenEvidence}
-                >
-                  <BookOpen size={17} />
-
-                  Evidence
-                </button>
-
-                <button
-                  type="button"
-                  onClick={onOpenModel}
-                >
-                  <Beaker size={17} />
-
-                  Model
-                </button>
-
-                <button
-                  type="button"
-                  onClick={onOpenConnections}
-                >
-                  <Network size={17} />
-
-                  Connections
-                </button>
-              </div>
-            </article>
+              <section className="helix-results-card helix-results-notes">
+                <span className="helix-agent-label">What to verify next</span>
+                <p>{bestMechanism?.nextTest || 'Examine primary sources and identify testable predictions before drawing conclusions.'}</p>
+                {researchAnalysis.limitations.length > 0 && (
+                  <details>
+                    <summary>Limitations and reliability notes ({researchAnalysis.limitations.length})</summary>
+                    <ul>{researchAnalysis.limitations.map((limitation) => <li key={limitation}>{limitation}</li>)}</ul>
+                  </details>
+                )}
+              </section>
+            </div>
           )}
         </section>
       </section>
