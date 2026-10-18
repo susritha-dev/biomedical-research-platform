@@ -657,6 +657,161 @@ export function Home() {
             text-align: right;
           }
 
+
+          /* Helix hybrid design system — cinematic navy and luminous ivory */
+          .helix-home-page {
+            background:
+              radial-gradient(circle at 7% 5%, rgba(92, 136, 242, .14), transparent 31%),
+              radial-gradient(circle at 92% 35%, rgba(113, 188, 235, .11), transparent 30%),
+              #f8fafc;
+          }
+          .helix-hero { gap: clamp(24px, 4vw, 54px); padding-top: 76px; }
+          .helix-hero h1 { color: #101e39; letter-spacing: -3.5px; }
+          .helix-hero h1 span {
+            background: linear-gradient(95deg, #2444a6 5%, #4381e0 68%, #56b5d9);
+            -webkit-background-clip: text;
+            background-clip: text;
+          }
+          .helix-eyebrow { letter-spacing: 1.45px; color: #4167b6; }
+          .helix-hero-description { color: #52637e; }
+          .helix-hero-search {
+            background: #fff;
+            border-color: rgba(112, 137, 192, .22);
+            box-shadow: 0 20px 65px rgba(26, 55, 113, .1);
+          }
+          .helix-primary-button, .helix-hero-search a {
+            background: linear-gradient(135deg, #234798, #426bd8);
+            border-color: #3157ad;
+          }
+          .helix-hero-visual {
+            border-color: rgba(136, 184, 255, .24);
+            background:
+              radial-gradient(ellipse at 49% 48%, rgba(30, 114, 212, .42), transparent 48%),
+              radial-gradient(circle at 95% 2%, rgba(20, 189, 211, .18), transparent 44%),
+              linear-gradient(150deg, #07152e 0%, #0d2754 55%, #163f7b 100%);
+            box-shadow: 0 38px 90px rgba(12, 36, 82, .22), inset 0 0 75px rgba(43, 91, 179, .08);
+          }
+          .helix-hero-visual::before {
+            content: '';
+            position: absolute;
+            z-index: 1;
+            inset: 0;
+            border-radius: inherit;
+            background: radial-gradient(circle at 50% 50%, transparent 20%, rgba(4, 11, 29, .35) 100%);
+            pointer-events: none;
+          }
+          .helix-visual-grid {
+            opacity: 1;
+            background-image:
+              linear-gradient(rgba(139, 183, 255, .09) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(139, 183, 255, .09) 1px, transparent 1px);
+            mask-image: radial-gradient(ellipse at center, black 20%, transparent 86%);
+          }
+          .helix-orbit { border-color: rgba(120, 205, 254, .32); }
+          .helix-dna-aura {
+            background: radial-gradient(ellipse, rgba(65, 150, 255, .66), transparent 70%);
+          }
+          .helix-dna-svg {
+            filter: drop-shadow(0 0 30px rgba(82, 169, 250, .65));
+          }
+          .helix-dna-label {
+            border-color: rgba(155, 207, 255, .22);
+            background: rgba(5, 26, 61, .84);
+            color: #b8eaff;
+            box-shadow: 0 12px 30px rgba(3, 10, 33, .35);
+          }
+          .helix-network-card {
+            border: 1px solid rgba(185, 218, 255, .2);
+            background: rgba(11, 36, 77, .87);
+            box-shadow: 0 18px 42px rgba(0, 7, 26, .25);
+            backdrop-filter: blur(16px);
+          }
+          .helix-network-card span { color: #85cfff; }
+          .helix-network-card strong { color: #f1f7ff; }
+          .helix-network-card p { color: #b2c9e9; }
+          .helix-lab-showcase { padding-top: 65px; }
+          .helix-lab-heading h2, .helix-section-heading h2, .helix-flow-panel h2 {
+            color: #122544;
+          }
+          .helix-home-lab-image {
+            border: 6px solid white;
+            border-radius: 32px;
+            box-shadow: 0 30px 85px rgba(17, 39, 75, .15);
+          }
+          .helix-home-lab-image::after {
+            content: '';
+            position: absolute;
+            inset: 45% 0 0;
+            background: linear-gradient(0deg, rgba(6, 21, 47, .36), transparent);
+            pointer-events: none;
+          }
+          .helix-lab-caption { z-index: 1; }
+          .helix-feature-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+          .helix-feature-card {
+            position: relative;
+            min-height: 268px;
+            overflow: hidden;
+            border-color: rgba(127, 151, 202, .17);
+            background: linear-gradient(155deg, #fff 0%, #f4f7fe 100%);
+            box-shadow: 0 18px 50px rgba(21, 47, 96, .06);
+            transition: transform 250ms ease, box-shadow 250ms ease, border-color 250ms ease;
+          }
+          .helix-feature-card:hover {
+            transform: translateY(-7px);
+            border-color: rgba(80, 132, 223, .4);
+            box-shadow: 0 25px 60px rgba(18, 56, 121, .14);
+          }
+          .helix-feature-card:first-child {
+            grid-column: span 2;
+            background:
+              radial-gradient(circle at 100% 0%, rgba(114, 193, 255, .26), transparent 55%),
+              linear-gradient(140deg, #10295b, #204a93);
+            border-color: #315baa;
+          }
+          .helix-feature-card:first-child .helix-feature-icon {
+            background: rgba(163, 213, 255, .16);
+            color: #ace8ff;
+          }
+          .helix-feature-card:first-child small { color: #98cbff; }
+          .helix-feature-card:first-child h3 { color: #fff; font-size: 27px; }
+          .helix-feature-card:first-child p { color: #c7ddfb; max-width: 430px; font-size: 14px; }
+          .helix-feature-card:nth-child(4) { grid-column: span 2; }
+          .helix-feature-card h3 { color: #142a4c; }
+          .helix-feature-card p { color: #62718b; }
+          .helix-feature-icon { background: #e7eeff; color: #315ec1; }
+          .helix-flow-panel {
+            border-color: rgba(111, 147, 208, .2);
+            background: linear-gradient(140deg, #fff, #f1f6ff);
+            box-shadow: 0 30px 75px rgba(22, 51, 111, .08);
+          }
+          .helix-step {
+            background: rgba(255, 255, 255, .86);
+            border-color: rgba(120, 156, 212, .2);
+            transition: transform 200ms ease, border-color 200ms ease;
+          }
+          .helix-step:hover { transform: translateX(4px); border-color: rgba(66, 113, 210, .4); }
+          .helix-demo-card {
+            background:
+              radial-gradient(circle at 12% 12%, rgba(60, 131, 238, .37), transparent 38%),
+              radial-gradient(circle at 90% 90%, rgba(28, 182, 206, .13), transparent 45%),
+              linear-gradient(140deg, #091b3b, #183e80);
+            box-shadow: 0 35px 80px rgba(13, 40, 88, .22);
+          }
+          .helix-demo-actions a { transition: transform 180ms ease, background 180ms ease; }
+          .helix-demo-actions a:hover { transform: translateY(-3px); background: rgba(255,255,255,.12); }
+          .helix-demo-actions a:first-child { color: #153775; }
+          .helix-demo-actions a:first-child:hover { background: #eef5ff; }
+          @media (max-width: 980px) {
+            .helix-feature-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .helix-feature-card:first-child, .helix-feature-card:nth-child(4) { grid-column: span 1; }
+          }
+          @media (max-width: 650px) {
+            .helix-hero { padding-top: 48px; }
+            .helix-feature-grid { grid-template-columns: 1fr; }
+            .helix-feature-card:first-child, .helix-feature-card:nth-child(4) { grid-column: auto; }
+            .helix-hero h1 { letter-spacing: -2px; }
+          }
+
           @keyframes helixFadeUp {
             from {
               opacity: 0;
