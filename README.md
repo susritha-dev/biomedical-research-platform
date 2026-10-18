@@ -61,25 +61,6 @@ These services have different coverage, response limits, and metadata quality. H
 - **Vercel** — Web deployment.
 - **Supabase JavaScript SDK** — Listed as a project dependency; this README does not claim it is the current production storage or authentication backend.
 
-## 🚀 Run Locally
-
-**Prerequisites:** Recent Node.js and npm versions.
-
-```bash
-git clone https://github.com/susritha-dev/biomedical-research-platform.git
-cd biomedical-research-platform
-npm install
-npm run dev
-```
-
-The development command runs the **Vite frontend on port 5173** and the **Express server on port 3001**. Vite proxies `/api/evidence` to the local Express server and `/api/monarch` to the Monarch Initiative API.
-
-To create a production frontend build:
-
-```bash
-npm run build
-```
-
 ## 🔬 Research Integrity
 
 Helix is intended to help users **find, organize, and explore** biomedical information. A publication appearing in search results does not mean it supports a claim, and keyword matching is not a substitute for assessing study methods, conflicting findings, applicability, and source validity. Computational mechanisms and proposed hypotheses require independent review and experimental confirmation.
