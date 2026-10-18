@@ -657,3 +657,37 @@
 .helix-explore-form:focus-within { border-color:#8eafe8;box-shadow:0 20px 60px rgba(24,73,149,.15); }
 .helix-explore-workspace button { transition:background .18s ease,border-color .18s ease,transform .18s ease; }
 .helix-explore-workspace button:hover { border-color:#a8c4ed; }
+
+
+/* Workspace height fix: remove the phantom scroll region below Agent */
+.helix-explore-workspace {
+  display: flex;
+  flex-direction: column;
+  min-height: 0 !important;
+  height: auto;
+  overflow: visible;
+}
+.helix-explore-content {
+  display: block;
+  flex: none;
+  min-height: 0 !important;
+  height: auto !important;
+  padding-bottom: 0;
+  overflow: visible;
+}
+.helix-explore-content > .helix-agent-page {
+  min-height: 0 !important;
+  height: auto !important;
+  margin-bottom: 0;
+}
+.helix-explore-content .helix-agent-main {
+  height: auto !important;
+  min-height: 0 !important;
+  overflow: visible !important;
+}
+.helix-explore-content .helix-agent-content {
+  padding-bottom: 20px;
+}
+.helix-explore-content .helix-agent-panel-large {
+  min-height: 0 !important;
+}
