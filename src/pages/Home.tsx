@@ -20,31 +20,35 @@ import { Navbar } from '../components/Navbar'
 export function Home() {
   const [activeLayer, setActiveLayer] = useState(2)
   useEffect(() => {
-    const stage = document.querySelector<HTMLElement>('.helix-explode-stage')
     const section = document.querySelector<HTMLElement>('.helix-layer-section')
-    if (!stage || !section) return
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      stage.style.setProperty('--explode', '1')
-      return
-    }
+    if (!section) return
+    const motion = window.matchMedia('(prefers-reduced-motion: reduce)')
+    if (motion.matches) return
     let raf = 0
+    const clamp = (value: number) => Math.min(1, Math.max(0, value))
+    const smooth = (value: number) => value * value * (3 - 2 * value)
     const update = () => {
       raf = 0
       const rect = section.getBoundingClientRect()
-      const start = window.innerHeight * .90
-      const distance = Math.max(1, window.innerHeight * .90 + rect.height * .45)
-      const progress = Math.max(0, Math.min(1, (start - rect.top) / distance))
-      const eased = progress * progress * (3 - 2 * progress)
-      stage.style.setProperty('--explode', String(eased))
+      const travel = Math.max(1, section.offsetHeight - window.innerHeight)
+      const progress = clamp(-rect.top / travel)
+      // Arrive and zoom in, separate the layers, then retreat to the page.
+      const enter = smooth(clamp(progress / .18))
+      const split = smooth(clamp((progress - .20) / .48))
+      const exit = smooth(clamp((progress - .79) / .21))
+      section.style.setProperty('--scene-enter', String(enter))
+      section.style.setProperty('--scene-explode', String(split))
+      section.style.setProperty('--scene-exit', String(exit))
+      section.style.setProperty('--scene-progress', String(progress))
     }
-    const onScroll = () => { if (!raf) raf = requestAnimationFrame(update) }
+    const onScroll = () => { if (!raf) raf = window.requestAnimationFrame(update) }
     update()
     window.addEventListener('scroll', onScroll, { passive: true })
     window.addEventListener('resize', onScroll)
     return () => {
       window.removeEventListener('scroll', onScroll)
       window.removeEventListener('resize', onScroll)
-      if (raf) cancelAnimationFrame(raf)
+      if (raf) window.cancelAnimationFrame(raf)
     }
   }, [])
 
@@ -1247,6 +1251,101 @@ export function Home() {
             .helix-explode-layer.layer-2 { transform: translate(-50%,calc(-50% + 45px * var(--explode))) rotateX(60deg) rotateZ(-31deg); }
             .helix-explode-layer.layer-3 { transform: translate(-50%,calc(-50% + 135px * var(--explode))) rotateX(60deg) rotateZ(-31deg); }
           }
+
+          /* Immersive pinned scroll sequence: enter / explode / exit */
+          .helix-layer-section {
+            --scene-enter: 0; --scene-explode: 0; --scene-exit: 0; --scene-progress: 0;
+            position: relative;
+            height: 310vh;
+            min-height: 2200px;
+            padding: 0 !important;
+            border: 0;
+            background: transparent;
+            isolation: isolate;
+          }
+          .helix-scroll-scene {
+            position: sticky;
+            top: 74px;
+            height: calc(100vh - 74px);
+            min-height: 620px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 10px clamp(12px, 2.2vw, 30px) 22px;
+            border-radius: 10px;
+            background: linear-gradient(155deg, #edf5ff 0%, #f8fbff 42%, #dceafd 100%);
+            box-shadow: 0 0 0 1px rgba(82,125,200,.18);
+            transform: scale(calc(.87 + .13 * var(--scene-enter) - .12 * var(--scene-exit)));
+            opacity: calc(.65 + .35 * var(--scene-enter) - .35 * var(--scene-exit));
+            will-change: transform;
+          }
+          .helix-scroll-scene::before {
+            content: ''; position: absolute; inset: 0; pointer-events:none;
+            background: radial-gradient(ellipse at 35% 50%,rgba(40,111,230,.10),transparent 53%);
+          }
+          .helix-layer-intro { position: relative; z-index: 2; margin: 0 auto 6px !important; }
+          .helix-layer-intro h2 { font-size: clamp(37px, 5.2vw, 70px); margin: 4px 0; }
+          .helix-layer-intro > p { font-size: 12px; }
+          .helix-explode-layout {
+            position: relative; z-index: 2; width: 100%;
+            flex: 0 1 auto;
+            min-height: 0;
+            grid-template-columns: minmax(0, 1.28fr) minmax(0,.72fr);
+            gap: clamp(14px, 2vw, 26px);
+            align-items: center;
+          }
+          .helix-explode-stage {
+            min-height: 0;
+            height: clamp(350px, 59vh, 620px);
+            --explode: var(--scene-explode);
+            transform: perspective(1300px) translateZ(calc(-140px + 140px * var(--scene-enter))) rotateX(calc(4deg - 4deg * var(--scene-enter)));
+            box-shadow: 0 40px 90px rgba(5, 25, 65, .24);
+          }
+          .helix-explode-description h3 { font-size: clamp(26px, 3vw, 39px); }
+          .helix-explode-lede { font-size: 12px; margin-bottom: 10px; }
+          .helix-explode-option { padding: 8px; }
+          .helix-explode-option-copy strong { font-size: 13px; }
+          .helix-explode-option-copy small { font-size: 10px; }
+          .helix-layer-cta { z-index: 2; margin-top: 10px; padding: 10px 15px; }
+          .helix-scene-progress { z-index: 2; position: absolute; left: 5%; right: 5%; bottom: 7px; height: 2px; background: rgba(39,93,180,.12); }
+          .helix-scene-progress span { display: block; height: 100%; width: calc(var(--scene-progress) * 100%); background: #3d7aca; }
+          @media(max-width:950px) {
+            .helix-layer-section { height: 290vh; min-height: 1850px; }
+            .helix-scroll-scene { justify-content: center; }
+            .helix-explode-layout { grid-template-columns: minmax(0,1fr) minmax(0,.85fr); }
+            .helix-explode-stage { height: clamp(330px, 54vh, 540px); }
+          }
+          @media(max-width:650px) {
+            .helix-layer-section { height: 270vh; min-height: 1700px; }
+            .helix-scroll-scene {
+              top: 0;
+              height: 100dvh;
+              min-height: 0;
+              padding: 8px 10px 13px;
+              transform: none;
+              opacity: 1;
+            }
+            .helix-layer-intro h2 { font-size: clamp(28px,8vw,44px); }
+            .helix-layer-intro > p { font-size: 10px; }
+            .helix-explode-layout { grid-template-columns: 1fr; gap: 6px; }
+            .helix-explode-stage { height: clamp(260px,40dvh,400px); }
+            .helix-explode-description { max-width: none; }
+            .helix-explode-description h3 { display:none; }
+            .helix-explode-lede { display:none; }
+            .helix-explode-option { padding: 5px; }
+            .helix-explode-option-copy small { display:none; }
+            .helix-explode-option-copy strong { font-size: 12px; }
+            .helix-layer-cta { padding: 9px 12px; font-size: 10px; }
+          }
+          @media(prefers-reduced-motion: reduce) {
+            .helix-layer-section { height:auto !important; min-height:0 !important; padding:32px 0 !important; }
+            .helix-scroll-scene { position:relative; top:auto; height:auto; min-height:0; overflow:visible; transform:none; opacity:1; }
+            .helix-explode-stage { --explode:1; transform:none; }
+            .helix-explode-layout { grid-template-columns:1fr; }
+            .helix-explode-description h3, .helix-explode-lede, .helix-explode-option-copy small { display:block; }
+          }
           @keyframes helixFadeUp {
             from {
               opacity: 0;
@@ -1681,6 +1780,7 @@ export function Home() {
 
 
         <section className="helix-layer-section" aria-labelledby="layers-title">
+          <div className="helix-scroll-scene">
           <div className="helix-layer-intro">
             <span className="helix-layer-index">INSIDE HELIX / AN INTERACTIVE BREAKDOWN</span>
             <h2 id="layers-title">The anatomy of <em>discovery.</em></h2>
@@ -1731,6 +1831,8 @@ export function Home() {
             </div>
           </div>
           <Link className="helix-layer-cta" to="/explore">ENTER THE RESEARCH EXPLORER <ArrowRight size={16} /></Link>
+          <div className="helix-scene-progress" aria-hidden="true"><span /></div>
+          </div>
         </section>
         <section className="helix-faq-section" aria-labelledby="faq-title">
           <div className="helix-faq-heading">
