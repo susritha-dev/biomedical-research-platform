@@ -30,7 +30,7 @@ export function Navbar() {
 
           .helix-premium-navbar .navbar-inner {
             width: min(1220px, calc(100% - 40px));
-            min-height: 74px;
+            min-height: 86px;
             margin: 0 auto;
             display: flex;
             align-items: center;
@@ -41,20 +41,20 @@ export function Navbar() {
           .helix-premium-navbar .brand {
             display: inline-flex;
             align-items: center;
-            gap: 10px;
+            gap: 13px;
             color: #20251f;
-            font-size: 21px;
+            font-size: 29px;
             font-weight: 900;
-            letter-spacing: -0.7px;
+            letter-spacing: -0.9px;
             text-decoration: none;
           }
 
           .helix-brand-mark {
             display: grid;
             place-items: center;
-            width: 34px;
-            height: 34px;
-            border-radius: 13px;
+            width: 46px;
+            height: 46px;
+            border-radius: 14px;
             background:
               radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.92), transparent 38%),
               #253b75;
@@ -164,7 +164,7 @@ export function Navbar() {
           className="brand"
         >
           <span className="helix-brand-mark">
-            <img src="/helix-logo.jpg" alt="" width={34} height={34} />
+            <img src="/helix-logo.jpg" alt="" width={46} height={46} />
           </span>
 
           Helix
