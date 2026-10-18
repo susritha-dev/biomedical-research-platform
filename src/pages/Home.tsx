@@ -1217,6 +1217,36 @@ export function Home() {
           @media(max-width:950px){.helix-explode-layout{grid-template-columns:1fr;gap:24px;}.helix-explode-stage{min-height:495px;}.helix-explode-description{max-width:650px;}}
           @media(max-width:600px){.helix-explode-stage{min-height:440px;}.helix-explode-layer{width:69%;height:138px;}.helix-explode-layer.layer-0{transform:translate(-50%,calc(-50% - 122px * var(--explode))) rotateX(57deg) rotateZ(-31deg)}.helix-explode-layer.layer-1{transform:translate(-50%,calc(-50% - 42px * var(--explode))) rotateX(57deg) rotateZ(-31deg)}.helix-explode-layer.layer-2{transform:translate(-50%,calc(-50% + 40px * var(--explode))) rotateX(57deg) rotateZ(-31deg)}.helix-explode-layer.layer-3{transform:translate(-50%,calc(-50% + 122px * var(--explode))) rotateX(57deg) rotateZ(-31deg)}.helix-explode-head,.helix-explode-foot{font-size:8px;left:12px;right:12px;}.helix-explode-head>span:last-child{display:none;}}
           @media(prefers-reduced-motion:reduce){.helix-explode-halo{animation:none!important;}.helix-explode-option,.helix-explode-layer{transition:none!important;}}
+
+          /* Focused layout: centered editorial heading + prominent exploded object */
+          .helix-layer-section { padding: 45px 0 52px !important; }
+          .helix-layer-intro { display: flex !important; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 0; max-width: 900px; margin: 0 auto 20px !important; }
+          .helix-layer-intro h2 { margin: 10px auto 9px; font-size: clamp(43px, 6vw, 80px); width: 100%; max-width: 850px; letter-spacing: -.068em; }
+          .helix-layer-intro > p { color: #5f718c; margin: 0; font-size: 15px; line-height: 1.6; }
+          .helix-explode-layout { grid-template-columns: minmax(0,1.25fr) minmax(0,.75fr); gap: 22px; margin: 0 0 12px; }
+          .helix-explode-stage { min-height: 625px; border-radius: 8px; }
+          .helix-explode-space { perspective: 1200px; }
+          .helix-explode-layer { width: min(69%,425px); height: 200px; }
+          .helix-explode-layer.layer-0 { transform: translate(-50%,calc(-50% - 207px * var(--explode))) rotateX(60deg) rotateZ(-31deg); }
+          .helix-explode-layer.layer-1 { transform: translate(-50%,calc(-50% - 69px * var(--explode))) rotateX(60deg) rotateZ(-31deg); }
+          .helix-explode-layer.layer-2 { transform: translate(-50%,calc(-50% + 69px * var(--explode))) rotateX(60deg) rotateZ(-31deg); }
+          .helix-explode-layer.layer-3 { transform: translate(-50%,calc(-50% + 207px * var(--explode))) rotateX(60deg) rotateZ(-31deg); }
+          .helix-explode-plane { border: 1.5px solid rgba(174,226,255,.84); box-shadow: inset 0 1px 0 rgba(228,250,255,.44),0 9px 0 #071a3a,0 12px 0 rgba(86,195,255,.22),0 22px 40px rgba(0,6,29,.45); }
+          .helix-explode-layer.selected .helix-explode-plane { border-color: #9cf3ff; box-shadow: inset 0 0 45px rgba(57,171,244,.17),0 9px 0 #071a3a,0 12px 0 #61b9ff,0 0 40px rgba(96,206,255,.55); }
+          .helix-explode-description h3 { font-size: clamp(29px,3.2vw,42px); }
+          .helix-explode-option { padding: 12px 8px; }
+          .helix-explode-option-copy small { font-size: 11px; }
+          .helix-layer-cta { margin-top: 7px; }
+          @media(max-width:950px) { .helix-explode-layout { grid-template-columns: 1fr; gap: 18px; } .helix-explode-stage { min-height: 590px; } }
+          @media(max-width:600px) {
+            .helix-layer-intro { margin-bottom: 16px !important; }
+            .helix-explode-stage { min-height: 465px; }
+            .helix-explode-layer { width: 70%; height: 142px; }
+            .helix-explode-layer.layer-0 { transform: translate(-50%,calc(-50% - 135px * var(--explode))) rotateX(60deg) rotateZ(-31deg); }
+            .helix-explode-layer.layer-1 { transform: translate(-50%,calc(-50% - 45px * var(--explode))) rotateX(60deg) rotateZ(-31deg); }
+            .helix-explode-layer.layer-2 { transform: translate(-50%,calc(-50% + 45px * var(--explode))) rotateX(60deg) rotateZ(-31deg); }
+            .helix-explode-layer.layer-3 { transform: translate(-50%,calc(-50% + 135px * var(--explode))) rotateX(60deg) rotateZ(-31deg); }
+          }
           @keyframes helixFadeUp {
             from {
               opacity: 0;
@@ -1652,14 +1682,15 @@ export function Home() {
 
         <section className="helix-layer-section" aria-labelledby="layers-title">
           <div className="helix-layer-intro">
-            <div><span className="helix-layer-index">THE HELIX SYSTEM / 04 LAYERS</span></div>
-            <h2 id="layers-title">From curiosity to <em>clarity.</em></h2>
+            <span className="helix-layer-index">INSIDE HELIX / AN INTERACTIVE BREAKDOWN</span>
+            <h2 id="layers-title">The anatomy of <em>discovery.</em></h2>
+            <p>One research engine. Four connected layers. Scroll to pull it apart.</p>
           </div>
           <div className="helix-explode-layout">
             <div className="helix-explode-stage" aria-label="Interactive exploded view of the four-layer Helix research engine">
               <div className="helix-explode-head">
                 <span><span className="helix-live-dot" /> SYSTEM ARCHITECTURE / LIVE MODEL</span>
-                <span>SCROLL TO EXPLODE <ArrowRight size={12} /></span>
+                <span>SCROLL TO EXPLORE <ArrowRight size={12} /></span>
               </div>
               <div className="helix-explode-space">
                 <div className="helix-explode-halo" />
@@ -1681,8 +1712,8 @@ export function Home() {
             </div>
             <div className="helix-explode-description">
               <p className="helix-technical-label">EXPLORE THE ARCHITECTURE</p>
-              <h3>Four layers. <span>One scientific workflow.</span></h3>
-              <p className="helix-explode-lede">See how the parts of an investigation fit together. Scroll to separate the stack, then select any layer to explore its role.</p>
+              <h3>Every discovery has <span>layers.</span></h3>
+              <p className="helix-explode-lede">Select a layer to reveal its role in the research process.</p>
               {[
                 ['Start with a question', 'Turn curiosity about a gene, disease, or pathway into a focused research direction.'],
                 ['Examine the evidence', 'Explore scientific literature, inspect sources, and separate supported claims from uncertainty.'],
@@ -1701,140 +1732,6 @@ export function Home() {
           </div>
           <Link className="helix-layer-cta" to="/explore">ENTER THE RESEARCH EXPLORER <ArrowRight size={16} /></Link>
         </section>
-        <section className="helix-usecase-section" aria-labelledby="usecases-title">
-          <div className="helix-usecase-heading">
-            <p className="helix-eyebrow"><Dna size={15} /> Made for exploration</p>
-            <h2 id="usecases-title">Serious curiosity deserves better tools.</h2>
-            <p>Whether you're learning new biology or shaping your next research idea, Helix brings useful structure to the process of asking better questions.</p>
-          </div>
-          <div className="helix-usecase-grid">
-            <article className="helix-usecase">
-              <span className="helix-usecase-num">01</span>
-              <h3>Students & science learners</h3>
-              <p>Break down difficult concepts, explore biological processes, and build an intuitive understanding of scientific mechanisms.</p>
-              <Link to="/explore">Explore a question <ArrowRight size={15} /></Link>
-            </article>
-            <article className="helix-usecase">
-              <span className="helix-usecase-num">02</span>
-              <h3>Early-stage researchers</h3>
-              <p>Structure a topic, map possible connections, and organize hypotheses for closer investigation with primary sources.</p>
-              <Link to="/hypotheses">Explore hypotheses <ArrowRight size={15} /></Link>
-            </article>
-            <article className="helix-usecase">
-              <span className="helix-usecase-num">03</span>
-              <h3>Curious innovators</h3>
-              <p>See where genes, pathways, and research concepts intersect to identify questions worth exploring further.</p>
-              <Link to="/graph">Explore connections <ArrowRight size={15} /></Link>
-            </article>
-          </div>
-        </section>
-        <section
-          className="helix-flow-section"
-          id="how-it-works"
-        >
-          <div className="helix-flow-panel">
-            <div>
-              <p className="helix-eyebrow">
-                <Dna size={15} />
-                How it works
-              </p>
-
-              <h2>
-                From question to investigation.
-              </h2>
-
-              <p>
-                Helix guides users through a scientific research
-                workflow that combines question analysis,
-                evidence exploration, visual learning,
-                and critical evaluation.
-              </p>
-            </div>
-
-            <div className="helix-steps">
-              <article className="helix-step">
-                <span className="helix-step-number">
-                  01
-                </span>
-
-                <div>
-                  <h3>Ask</h3>
-                  <p>
-                    Enter a scientific or biomedical
-                    research question.
-                  </p>
-                </div>
-              </article>
-
-              <article className="helix-step">
-                <span className="helix-step-number">
-                  02
-                </span>
-
-                <div>
-                  <h3>Investigate</h3>
-                  <p>
-                    Let Helix organize concepts,
-                    mechanisms, and research directions.
-                  </p>
-                </div>
-              </article>
-
-              <article className="helix-step">
-                <span className="helix-step-number">
-                  03
-                </span>
-
-                <div>
-                  <h3>Explore</h3>
-                  <p>
-                    Navigate evidence, interactive models,
-                    and scientific connections.
-                  </p>
-                </div>
-              </article>
-
-              <article className="helix-step">
-                <span className="helix-step-number">
-                  04
-                </span>
-
-                <div>
-                  <h3>Save and continue</h3>
-                  <p>
-                    Save investigations locally and
-                    return to them later.
-                  </p>
-                </div>
-              </article>
-            </div>
-          </div>
-        </section>
-
-        <section className="helix-section">
-          <div className="helix-section-heading">
-            <div>
-              <p className="helix-eyebrow">
-                <ShieldCheck size={15} />
-                Responsible research
-              </p>
-
-              <h2>
-                Explore ideas. Question evidence.
-              </h2>
-            </div>
-
-            <p>
-              Helix is designed for research and education.
-              It does not diagnose diseases, recommend medical
-              treatments, or independently prove scientific
-              claims. Generated findings require
-              scientific verification.
-            </p>
-          </div>
-        </section>
-
-
         <section className="helix-faq-section" aria-labelledby="faq-title">
           <div className="helix-faq-heading">
             <p className="helix-eyebrow"><ShieldCheck size={15} /> The details</p>
