@@ -492,12 +492,22 @@ export async function searchEvidence(query) {
     ['Crossref', searchCrossref],
   ]
   const searches = await Promise.allSettled(providers.map(async ([, search]) => {
-    const first = await search(cleanedQuery)
-    if (!focusedQuery || focusedQuery.toLowerCase() === cleanedQuery.toLowerCase()) return first
+    let first = []
+    let firstError = null
+    try {
+      first = await search(cleanedQuery)
+    } catch (error) {
+      firstError = error
+    }
+    if (!focusedQuery || focusedQuery.toLowerCase() === cleanedQuery.toLowerCase()) {
+      if (firstError) throw firstError
+      return first
+    }
     try {
       const second = await search(focusedQuery)
       return [...first, ...second]
-    } catch {
+    } catch (error) {
+      if (firstError) throw firstError
       return first
     }
   }))
