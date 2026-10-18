@@ -895,6 +895,69 @@ export function Home() {
             .helix-workspace-sidebar { display: none; }
             .helix-workspace-top { padding: 12px; }
           }
+
+          /* Memorable-inspired editorial / technical visual language */
+          .helix-home-page { background-color: #f5f6f3; }
+          .helix-hero { min-height: 660px; padding-bottom: 80px; }
+          .helix-hero-copy { position: relative; z-index: 2; }
+          .helix-hero .helix-eyebrow {
+            display: inline-flex; padding: 9px 13px; border: 1px solid #b9cbea;
+            border-radius: 4px; background: rgba(255,255,255,.64); color: #163d81;
+          }
+          .helix-hero h1 { font-weight: 900; font-size: clamp(54px, 6.2vw, 94px); letter-spacing: -.065em; line-height: .98; }
+          .helix-hero h1 span { margin-top: 13px; }
+          .helix-hero-description { max-width: 520px; font-size: 17px; line-height: 1.8; }
+          .helix-hero-visual { border-radius: 12px; }
+          .helix-network-card { border-radius: 9px; }
+          .helix-workspace-preview, .helix-feature-card, .helix-flow-panel, .helix-usecase, .helix-demo-card { border-radius: 14px; }
+          .helix-kinetic-band {
+            display: flex; overflow: hidden; user-select: none; margin: 20px calc((min(1220px, 100vw - 40px) - 100vw)/2) 80px;
+            padding: 17px 0; background: #10254b; color: #c8e7ff;
+            border-top: 1px solid rgba(255,255,255,.11); border-bottom: 1px solid rgba(255,255,255,.11);
+          }
+          .helix-kinetic-track { display: flex; align-items: center; flex-shrink: 0; gap: 38px; min-width: max-content; animation: helixMarquee 36s linear infinite; }
+          .helix-kinetic-track span { display: inline-flex; align-items: center; gap: 38px; font-size: 12px; text-transform: uppercase; font-weight: 850; letter-spacing: .16em; }
+          .helix-kinetic-track b { color: #53a7de; font-weight: 600; }
+          @keyframes helixMarquee { to { transform: translateX(-100%); } }
+          .helix-kinetic-band:hover .helix-kinetic-track { animation-play-state: paused; }
+          .helix-layer-section {
+            position: relative; padding: 78px 0 104px; border-top: 1px solid #d6dfeb; border-bottom: 1px solid #d6dfeb;
+          }
+          .helix-layer-intro { display: grid; grid-template-columns: .8fr 1.2fr; gap: 45px; align-items: start; margin-bottom: 52px; }
+          .helix-layer-index { color: #3b65aa; font-size: 11px; font-weight: 900; letter-spacing: .16em; text-transform: uppercase; }
+          .helix-layer-intro h2 { margin: 0; font-size: clamp(44px, 6.5vw, 88px); line-height: .99; letter-spacing: -.067em; color: #132b4f; }
+          .helix-layer-intro h2 em { font-style: normal; color: #4775d0; }
+          .helix-layer-list { border-top: 1px solid #b6c7dc; }
+          .helix-layer-item {
+            display: grid; grid-template-columns: 90px 1.1fr 1fr 36px; gap: 25px; align-items: center;
+            padding: 30px 6px; border-bottom: 1px solid #cbd7e7; transition: background .2s, padding .2s;
+          }
+          .helix-layer-item:hover { background: rgba(225,237,253,.54); padding-left: 18px; padding-right: 18px; }
+          .helix-layer-item .layer-n { font-size: 13px; font-weight: 900; color: #416cae; letter-spacing: .1em; }
+          .helix-layer-item h3 { font-size: clamp(25px,3vw,39px); color: #173355; line-height: 1.1; letter-spacing: -.045em; margin: 0; }
+          .helix-layer-item p { font-size: 13px; line-height: 1.7; color: #61718a; margin: 0; }
+          .helix-layer-item svg { color: #4774bb; }
+          .helix-technical-label { font-size: 10px; font-weight: 850; letter-spacing: .13em; text-transform: uppercase; color: #4a6a9b; }
+          .helix-layer-cta { margin-top: 28px; display: inline-flex; align-items: center; gap: 12px; padding: 14px 20px; border-radius: 5px; background: #173d7e; color: white; font-size: 13px; font-weight: 850; text-decoration: none; transition: transform .2s; }
+          .helix-layer-cta:hover { transform: translateY(-3px); }
+          .helix-product-heading h2, .helix-usecase-heading h2, .helix-faq-heading h2, .helix-section-heading h2 { letter-spacing: -.065em; }
+          .helix-product-section { padding-top: 70px; }
+          .helix-trust-strip { border-radius: 7px; }
+          @media (max-width: 900px) {
+            .helix-layer-intro { grid-template-columns: 1fr; gap: 18px; }
+            .helix-layer-item { grid-template-columns: 46px 1fr 32px; gap: 12px; }
+            .helix-layer-item p { grid-column: 2 / 3; grid-row: 2; }
+            .helix-layer-item > svg { grid-column: 3; grid-row: 1; }
+          }
+          @media (max-width: 650px) {
+            .helix-hero { min-height: 0; }
+            .helix-kinetic-band { margin-left: -20px; margin-right: -20px; margin-bottom: 40px; }
+            .helix-layer-section { padding: 55px 0 70px; }
+            .helix-layer-intro h2 { font-size: clamp(40px,11vw,68px); }
+          }
+          @media (prefers-reduced-motion: reduce) {
+            .helix-kinetic-track { animation: none !important; }
+          }
           @keyframes helixFadeUp {
             from {
               opacity: 0;
@@ -1144,6 +1207,16 @@ export function Home() {
         </section>
 
 
+
+        <div className="helix-kinetic-band" aria-label="Research themes explored in Helix">
+          {[0, 1].map((repeat) => (
+            <div className="helix-kinetic-track" key={repeat} aria-hidden={repeat === 1}>
+              {['GENES & PATHWAYS', 'SCIENTIFIC EVIDENCE', 'BIOLOGICAL MODELS', 'MECHANISMS', 'KNOWLEDGE GRAPHS', 'RESEARCH QUESTIONS'].map((item) => (
+                <span key={item}>{item}<b>✳</b></span>
+              ))}
+            </div>
+          ))}
+        </div>
         <div className="helix-trust-strip" aria-label="Helix platform principles">
           <strong>Built for curious minds</strong>
           <div className="helix-trust-points">
@@ -1307,6 +1380,20 @@ export function Home() {
         </section>
 
 
+
+        <section className="helix-layer-section" aria-labelledby="layers-title">
+          <div className="helix-layer-intro">
+            <div><span className="helix-layer-index">THE HELIX SYSTEM / 04 LAYERS</span></div>
+            <h2 id="layers-title">From curiosity to <em>clarity.</em></h2>
+          </div>
+          <div className="helix-layer-list">
+            <article className="helix-layer-item"><span className="layer-n">01 /</span><h3>Ask something ambitious.</h3><p>Start with a question about a gene, condition, pathway, or complex biological process.</p><ArrowRight size={24} /></article>
+            <article className="helix-layer-item"><span className="layer-n">02 /</span><h3>Follow the evidence.</h3><p>Explore relevant literature and understand what sources support—and what remains uncertain.</p><ArrowRight size={24} /></article>
+            <article className="helix-layer-item"><span className="layer-n">03 /</span><h3>See the mechanism.</h3><p>Use interactive educational models to visualize processes that can be hard to understand from text alone.</p><ArrowRight size={24} /></article>
+            <article className="helix-layer-item"><span className="layer-n">04 /</span><h3>Connect the discoveries.</h3><p>Map biological relationships, form new questions, and save investigations for deeper research.</p><ArrowRight size={24} /></article>
+          </div>
+          <Link className="helix-layer-cta" to="/explore">ENTER THE RESEARCH EXPLORER <ArrowRight size={16} /></Link>
+        </section>
         <section className="helix-usecase-section" aria-labelledby="usecases-title">
           <div className="helix-usecase-heading">
             <p className="helix-eyebrow"><Dna size={15} /> Made for exploration</p>
