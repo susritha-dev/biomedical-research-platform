@@ -4191,3 +4191,22 @@
 .assistant-live-paper a:hover {
   text-decoration: underline;
 }
+
+
+/* Shared in-app brand surfaces: hypothesis, discovery and legacy explorer views */
+.hypothesis-page,.hypothesis-page-shell,.placeholder-page {
+  background-color:#f7f9fd;
+  color:#142b4d;
+}
+.hypothesis-hero h1,.hypothesis-workspace-heading h2,
+.hypothesis-card h3,.hypothesis-question { color:#142b4d; }
+.hypothesis-card,.hypothesis-hero-copy,.hypothesis-hero-visual,
+.assistant-answer-panel,.assistant-question-panel,
+.real-source-card,.assistant-source-card,
+.hypothesis-safety-notice,.hypothesis-signal {
+  border-color:#dce5f1;
+  box-shadow:0 12px 36px rgba(22,52,105,.055);
+}
+.hypothesis-filter-button-active,.evidence-filter-button-active { border-color:#315dc3;color:#234d9c; }
+.hypothesis-entity-chip,.evidence-category-chip { border-color:#c9d9f1; }
+.assistant-question-form:focus-within { border-color:#7fa8e5; }
