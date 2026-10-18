@@ -357,3 +357,15 @@
     grid-template-columns: 1fr;
   }
 }
+
+
+/* Helix research agent theme */
+.helix-agent-page { background:#f7f9fd;color:#142b4d; }
+.helix-agent-sidebar { background:#edf3fc;border-color:#dce5f1; }
+.helix-agent-stage-item { color:#2e496b; }
+.helix-agent-stage-item-active,.helix-agent-stage-item:hover { background:white;border-color:#bdd1ec;box-shadow:0 12px 32px rgba(25,57,115,.08); }
+.helix-agent-stage-item > span { background:#173d7e; }
+.helix-agent-sidebar-question strong { color:#142b4d; }
+.helix-agent-nav button { background:white;color:#142b4d;border-color:#dce5f1; }
+.helix-agent-header { background:rgba(247,249,253,.95);border-color:#dce5f1; }
+.helix-agent-header h1 { color:#142b4d; }
