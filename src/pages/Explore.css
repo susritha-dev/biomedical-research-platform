@@ -691,3 +691,42 @@
 .helix-explore-content .helix-agent-panel-large {
   min-height: 0 !important;
 }
+
+
+/* Unified dashboard navigation */
+.helix-workspace-agent-panel[hidden] { display:none !important; }
+.helix-explore-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background:rgba(247,249,253,.96);
+  border-bottom:1px solid #d9e4f3;
+  box-shadow:0 5px 22px rgba(24,53,105,.045);
+}
+.helix-explore-tabs { gap:5px; padding:4px; background:#eaf0fa; border-radius:13px; }
+.helix-explore-tabs button { border-radius:10px; font-weight:750; transition:background .2s,color .2s,box-shadow .2s; }
+.helix-explore-tabs button.helix-explore-tab-active {
+  background:#fff; color:#193f82;
+  box-shadow:0 3px 12px rgba(22,58,116,.12);
+}
+.helix-workspace-location {
+  display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+  padding:12px clamp(16px,3vw,36px);
+  background:#f7f9fd;
+  border-bottom:1px solid #e4ebf5;
+}
+.helix-workspace-location > span:first-child {
+  color:#6e84a4; font-size:10px; font-weight:900; letter-spacing:.12em;
+}
+.helix-workspace-location strong { color:#213b63; font-size:13px; }
+.helix-workspace-location-hint { margin-left:auto; font-size:11px; color:#8291a7; }
+@media(max-width:1000px) {
+  .helix-explore-tabs { width:100%; }
+  .helix-explore-tabs button { flex:1; justify-content:center; white-space:nowrap; }
+}
+@media(max-width:650px){
+  .helix-explore-topbar { position:relative; }
+  .helix-workspace-location { padding:10px 16px; }
+  .helix-workspace-location-hint { display:none; }
+  .helix-explore-tabs button { font-size:11px; padding:8px; }
+}
