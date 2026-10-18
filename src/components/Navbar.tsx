@@ -164,7 +164,7 @@ export function Navbar() {
           className="brand"
         >
           <span className="helix-brand-mark">
-            <img src="/helix-logo.png" alt="" width={34} height={34} />
+            <img src="/helix-logo.jpg" alt="" width={34} height={34} />
           </span>
 
           Helix
