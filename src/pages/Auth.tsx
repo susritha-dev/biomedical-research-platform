@@ -279,7 +279,8 @@ function AuthForm() {
           to="/"
           className="auth-brand"
         >
-          Helix
+          <img src="/helix-logo.jpg" alt="" width={44} height={44} />
+          <span>Helix</span>
         </Link>
 
 
