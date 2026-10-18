@@ -1,193 +1,97 @@
+import {
+  ArrowRight,
+  Atom,
+  BookOpen,
+  Brain,
+  Dna,
+  FolderKanban,
+  FlaskConical,
+  Network,
+  Orbit,
+  Search,
+  ShieldCheck,
+  Sparkles,
+} from 'lucide-react'
 
-            50% {
-              transform: translateY(-18px) scale(1.25);
-              opacity: 1;
-            }
+import {
+  Link,
+} from 'react-router-dom'
+
+import {
+  Navbar,
+} from '../components/Navbar'
+
+export function Home() {
+  return (
+    <div className="site-shell helix-home-page">
+      <style>
+        {`
+          .helix-home-page {
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+            background:
+              radial-gradient(circle at 12% 6%, rgba(74, 101, 219, 0.16), transparent 32%),
+              radial-gradient(circle at 88% 14%, rgba(45, 98, 130, 0.12), transparent 30%),
+              #f8f7f1;
+            color: #232822;
           }
 
-          @keyframes helixOrbitOne {
-            from {
-              transform: rotateX(66deg) rotateZ(5deg);
-            }
-
-            to {
-              transform: rotateX(66deg) rotateZ(365deg);
-            }
+          .helix-home-page::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            background:
+              radial-gradient(circle at var(--x, 20%) var(--y, 20%), rgba(73, 104, 220, 0.12), transparent 28%),
+              radial-gradient(circle at 70% 80%, rgba(45, 100, 130, 0.08), transparent 30%);
+            animation: helixAmbientShift 12s ease-in-out infinite alternate;
           }
 
-          @keyframes helixOrbitTwo {
-            from {
-              transform: rotateY(62deg) rotateZ(-18deg);
-            }
-
-            to {
-              transform: rotateY(62deg) rotateZ(342deg);
-            }
+          .helix-home-page > * {
+            position: relative;
+            z-index: 1;
           }
 
-          @keyframes helixOrbitThree {
-            from {
-              transform: rotateX(72deg) rotateZ(-30deg);
-            }
-
-            to {
-              transform: rotateX(72deg) rotateZ(330deg);
-            }
+          .helix-home-page main {
+            width: min(1220px, calc(100% - 40px));
+            margin: 0 auto;
           }
 
-          @keyframes helixCorePulse {
-            0%,
-            100% {
-              transform: translate(-50%, -50%) scale(1);
-            }
-
-            50% {
-              transform: translate(-50%, -50%) scale(1.035);
-            }
+          .helix-hero {
+            display: grid;
+            grid-template-columns: minmax(0, 1.05fr) minmax(380px, 0.95fr);
+            gap: 32px;
+            align-items: center;
+            min-height: calc(100vh - 84px);
+            padding: 58px 0 70px;
           }
 
-          @keyframes helixGlowPulse {
-            0%,
-            100% {
-              opacity: 0.45;
-              transform: scale(0.92);
-            }
-
-            50% {
-              opacity: 1;
-              transform: scale(1.08);
-            }
+          .helix-hero-copy {
+            position: relative;
+            z-index: 2;
+            animation: helixFadeUp 780ms ease both;
           }
 
-          @keyframes helixCardFloat {
-            0%,
-            100% {
-              transform: translateY(0);
-            }
-
-            50% {
-              transform: translateY(-10px);
-            }
+          .helix-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            width: fit-content;
+            margin: 0 0 18px;
+            color: #3655a5;
+            font-size: 12px;
+            font-weight: 850;
+            letter-spacing: 0.75px;
+            text-transform: uppercase;
           }
 
-          @keyframes helixLineFlow {
-            from {
-              stroke-dashoffset: 0;
-            }
-
-            to {
-              stroke-dashoffset: -30;
-            }
+          .helix-eyebrow svg {
+            animation: helixSparklePulse 1.8s ease-in-out infinite;
           }
 
-          @media (prefers-reduced-motion: reduce) {
-            *,
-            *::before,
-            *::after {
-              animation-duration: 0.001ms !important;
-              animation-iteration-count: 1 !important;
-              scroll-behavior: auto !important;
-              transition-duration: 0.001ms !important;
-            }
-          }
-
-          @media (max-width: 980px) {
-            .helix-hero,
-            .helix-section-heading,
-            .helix-flow-panel,
-            .helix-demo-card {
-              grid-template-columns: 1fr;
-            }
-
-            .helix-hero {
-              min-height: auto;
-              padding-top: 42px;
-            }
-
-            .helix-feature-grid {
-              grid-template-columns: repeat(2, minmax(0, 1fr));
-            }
-
-            .helix-hero-visual {
-              min-height: 560px;
-            }
-          }
-
-          @media (max-width: 650px) {
-            .helix-home-page main,
-            .helix-home-footer {
-              width: min(100% - 28px, 1220px);
-            }
-
-            .helix-hero h1 {
-              letter-spacing: -2.6px;
-            }
-
-            .helix-hero-search {
-              align-items: stretch;
-              flex-direction: column;
-              padding: 16px;
-            }
-
-            .helix-hero-search a {
-              width: 100%;
-            }
-
-            .helix-feature-grid {
-              grid-template-columns: 1fr;
-            }
-
-            .helix-flow-panel,
-            .helix-demo-card {
-              padding: 22px;
-            }
-
-            .helix-home-footer {
-              flex-direction: column;
-            }
-
-            .helix-footer-note {
-              text-align: left;
-            }
-
-            .helix-hero-visual {
-              min-height: 610px;
-            }
-
-            .helix-network-card {
-              width: 138px;
-            }
-
-            .card-one,
-            .card-three {
-              left: 4%;
-            }
-
-            .card-two,
-            .card-four {
-              right: 4%;
-            }
-          }
-        `}
-      </style>
-
-      <Navbar />
-
-      <main>
-        <section className="helix-hero">
-          <div className="helix-hero-copy">
-            <p className="helix-eyebrow">
-              <Sparkles size={15} />
-
-              AI-powered scientific research explorer
-            </p>
-
-            <h1>
-              Ask a question.
-              <span>
-                Explore the evidence.
-              </span>
-            </h1>
-
-            <p className="helix-hero-description">
+          .helix-hero h1 {
+            max-width: 760px;
+            margin: 0;
             
