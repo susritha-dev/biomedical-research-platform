@@ -643,3 +643,17 @@
     padding-bottom: 24px;
   }
 }
+
+
+/* Helix Explorer theme */
+.helix-explore-entry,.helix-explore-workspace { background:radial-gradient(circle at 78% 8%,rgba(81,148,239,.14),transparent 32%),#f7f9fd; color:#142b4d; }
+.helix-explore-brand { color:#122a50; }
+.helix-explore-entry-nav nav a { background:#fff;border-color:#dce5f1;color:#26436b; }
+.helix-explore-entry-center h1 { color:#12274a; }
+.helix-explore-entry-center p { color:#64748b; }
+.helix-explore-kicker { color:#315dc3; }
+.helix-explore-form { background:#fff;border-color:#dce5f1;box-shadow:0 28px 75px rgba(16,49,103,.13); }
+.helix-explore-form textarea { color:#142b4d; }
+.helix-explore-form:focus-within { border-color:#8eafe8;box-shadow:0 20px 60px rgba(24,73,149,.15); }
+.helix-explore-workspace button { transition:background .18s ease,border-color .18s ease,transform .18s ease; }
+.helix-explore-workspace button:hover { border-color:#a8c4ed; }
