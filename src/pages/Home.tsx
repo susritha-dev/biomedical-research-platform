@@ -13,11 +13,41 @@ import {
   Sparkles,
 } from 'lucide-react'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Navbar } from '../components/Navbar'
 
 export function Home() {
+  const [activeLayer, setActiveLayer] = useState(2)
+  useEffect(() => {
+    const stage = document.querySelector<HTMLElement>('.helix-explode-stage')
+    const section = document.querySelector<HTMLElement>('.helix-layer-section')
+    if (!stage || !section) return
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      stage.style.setProperty('--explode', '1')
+      return
+    }
+    let raf = 0
+    const update = () => {
+      raf = 0
+      const rect = section.getBoundingClientRect()
+      const start = window.innerHeight * .90
+      const distance = Math.max(1, window.innerHeight * .90 + rect.height * .45)
+      const progress = Math.max(0, Math.min(1, (start - rect.top) / distance))
+      const eased = progress * progress * (3 - 2 * progress)
+      stage.style.setProperty('--explode', String(eased))
+    }
+    const onScroll = () => { if (!raf) raf = requestAnimationFrame(update) }
+    update()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onScroll)
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onScroll)
+      if (raf) cancelAnimationFrame(raf)
+    }
+  }, [])
+
   useEffect(() => {
     if (typeof window === 'undefined' || !('IntersectionObserver' in window)) return
     const root = document.querySelector('.helix-home-page')
@@ -1151,6 +1181,42 @@ export function Home() {
             .helix-hero-visual::after, .helix-hero-spark-field i, .helix-hero .helix-eyebrow > svg { animation: none !important; }
             .helix-home-page * { scroll-behavior: auto !important; }
           }
+
+          /* Interactive exploded scientific research engine */
+          .helix-explode-layout { display: grid; grid-template-columns: minmax(0, 1.08fr) minmax(0, .92fr); gap: 42px; align-items: center; margin: 8px 0 28px; }
+          .helix-explode-stage { --explode: .7; position: relative; min-height: 535px; overflow: hidden; isolation: isolate; border: 1px solid #234d91; border-radius: 14px; background: radial-gradient(ellipse at 52% 55%,rgba(54,112,213,.36),transparent 53%),linear-gradient(145deg,#07172f,#0e305f 73%,#103c71); box-shadow: 0 30px 75px rgba(10,32,75,.22); }
+          .helix-explode-stage::before { content: ''; position: absolute; inset:0; background-image:linear-gradient(rgba(122,180,246,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(122,180,246,.08) 1px,transparent 1px); background-size:27px 27px; mask-image:radial-gradient(circle,black 15%,transparent 78%); pointer-events:none; }
+          .helix-explode-head,.helix-explode-foot { position:absolute; left:19px;right:19px;display:flex;align-items:center;justify-content:space-between;gap:12px;z-index:8;color:#9cc0ea;font-size:9px;font-weight:850;letter-spacing:.12em; }
+          .helix-explode-head { top:18px; } .helix-explode-foot { bottom:17px; opacity:.68; }
+          .helix-explode-head > span { display:flex;align-items:center;gap:7px; }
+          .helix-explode-space { position:absolute;inset:38px 0 28px; perspective:900px; transform-style:preserve-3d; }
+          .helix-explode-halo { position:absolute;left:50%;top:50%;width:280px;height:280px;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(73,168,250,.45),transparent 72%);filter:blur(25px);animation:helixAura 5s ease-in-out infinite; }
+          .helix-explode-axis { position:absolute;left:50%;top:14%;height:72%;width:1px;background:linear-gradient(transparent,#70c9ff,transparent);opacity:.46;box-shadow:0 0 13px 2px rgba(91,184,250,.45); }
+          .helix-explode-layer { position:absolute;left:50%;top:50%;width:min(63%,330px);height:174px;transform-style:preserve-3d;transition:filter .35s ease,opacity .35s ease;filter:drop-shadow(0 16px 13px rgba(0,5,26,.38)); }
+          .helix-explode-layer.layer-0 { transform:translate(-50%,calc(-50% - 147px * var(--explode))) rotateX(57deg) rotateZ(-31deg);z-index:6; }
+          .helix-explode-layer.layer-1 { transform:translate(-50%,calc(-50% - 47px * var(--explode))) rotateX(57deg) rotateZ(-31deg);z-index:5; }
+          .helix-explode-layer.layer-2 { transform:translate(-50%,calc(-50% + 55px * var(--explode))) rotateX(57deg) rotateZ(-31deg);z-index:4; }
+          .helix-explode-layer.layer-3 { transform:translate(-50%,calc(-50% + 157px * var(--explode))) rotateX(57deg) rotateZ(-31deg);z-index:3; }
+          .helix-explode-layer.selected { filter:drop-shadow(0 0 18px rgba(96,206,255,.84)) drop-shadow(0 17px 16px rgba(0,5,26,.3)); }
+          .helix-explode-plane { width:100%;height:100%;position:relative;display:grid;place-items:center;overflow:hidden;border:1px solid rgba(161,222,255,.62);border-radius:14px;background:linear-gradient(150deg,rgba(37,110,193,.62),rgba(7,37,83,.85));box-shadow:inset 0 1px 0 rgba(204,240,255,.32),0 7px 0 #09254e,0 14px 28px rgba(0,7,35,.3); }
+          .helix-explode-layer.layer-1 .helix-explode-plane { background:linear-gradient(145deg,rgba(41,149,179,.72),rgba(7,49,80,.9)); }
+          .helix-explode-layer.layer-2 .helix-explode-plane { background:linear-gradient(145deg,rgba(77,83,189,.77),rgba(20,33,90,.92)); }
+          .helix-explode-layer.layer-3 .helix-explode-plane { background:linear-gradient(145deg,rgba(23,99,162,.75),rgba(7,29,64,.93)); }
+          .helix-explode-grid {position:absolute;inset:0;background-image:linear-gradient(rgba(165,219,255,.16) 1px,transparent 1px),linear-gradient(90deg,rgba(165,219,255,.16) 1px,transparent 1px);background-size:19px 19px;opacity:.6;}
+          .helix-plane-center {z-index:2;display:grid;place-items:center;gap:7px;color:#c5f0ff;}.helix-plane-center span {font-size:9px;font-weight:850;letter-spacing:.18em;}
+          .helix-plane-dna,.helix-plane-network {position:relative;color:#ccedff;filter:drop-shadow(0 0 12px rgba(124,220,255,.5));}
+          .helix-plane-evidence {position:relative;display:grid;grid-template-columns:repeat(3,31px);gap:11px;transform:rotate(-6deg);}
+          .helix-plane-evidence i {height:24px;border:1px solid rgba(166,242,254,.78);background:rgba(160,236,255,.22);border-radius:4px;box-shadow:0 0 12px rgba(117,219,255,.24);}
+          .helix-plane-tag {position:absolute;top:-18px;right:0;font-size:10px;color:#c6eaff;font-weight:900;letter-spacing:.09em;text-shadow:0 1px 7px #051b38;white-space:nowrap;}
+          .helix-explode-description h3 {font-size:clamp(30px,4vw,48px);margin:7px 0 13px;color:#12294f;letter-spacing:-.055em;line-height:1.05;}
+          .helix-explode-description h3 span {color:#487bd1;}.helix-explode-lede {font-size:14px;color:#5f728e;line-height:1.7;margin:0 0 20px;}
+          .helix-explode-option {border:0;border-top:1px solid #cbd8e8;background:transparent;padding:16px 9px;width:100%;display:grid;grid-template-columns:35px 1fr 20px;gap:12px;text-align:left;align-items:center;color:#284972;cursor:pointer;transition:background .2s,padding .2s;}
+          .helix-explode-option:last-child {border-bottom:1px solid #cbd8e8;}.helix-explode-option.active {background:#e5efff;padding-left:15px;border-radius:8px;}.helix-explode-option:hover {background:#ecf4ff;}
+          .helix-explode-option-number {font-size:11px;font-weight:900;color:#416db5;}.helix-explode-option-copy {display:grid;gap:5px;}.helix-explode-option-copy strong {font-size:15px;color:#1a3459;}.helix-explode-option-copy small {font-size:12px;color:#60748d;line-height:1.5;}.helix-explode-option > svg {transition:transform .2s;}.helix-explode-option:hover > svg {transform:translateX(4px);}
+          @keyframes helixAura {50%{opacity:.65;transform:translate(-50%,-50%) scale(1.2)}}
+          @media(max-width:950px){.helix-explode-layout{grid-template-columns:1fr;gap:24px;}.helix-explode-stage{min-height:495px;}.helix-explode-description{max-width:650px;}}
+          @media(max-width:600px){.helix-explode-stage{min-height:440px;}.helix-explode-layer{width:69%;height:138px;}.helix-explode-layer.layer-0{transform:translate(-50%,calc(-50% - 122px * var(--explode))) rotateX(57deg) rotateZ(-31deg)}.helix-explode-layer.layer-1{transform:translate(-50%,calc(-50% - 42px * var(--explode))) rotateX(57deg) rotateZ(-31deg)}.helix-explode-layer.layer-2{transform:translate(-50%,calc(-50% + 40px * var(--explode))) rotateX(57deg) rotateZ(-31deg)}.helix-explode-layer.layer-3{transform:translate(-50%,calc(-50% + 122px * var(--explode))) rotateX(57deg) rotateZ(-31deg)}.helix-explode-head,.helix-explode-foot{font-size:8px;left:12px;right:12px;}.helix-explode-head>span:last-child{display:none;}}
+          @media(prefers-reduced-motion:reduce){.helix-explode-halo{animation:none!important;}.helix-explode-option,.helix-explode-layer{transition:none!important;}}
           @keyframes helixFadeUp {
             from {
               opacity: 0;
@@ -1589,11 +1655,49 @@ export function Home() {
             <div><span className="helix-layer-index">THE HELIX SYSTEM / 04 LAYERS</span></div>
             <h2 id="layers-title">From curiosity to <em>clarity.</em></h2>
           </div>
-          <div className="helix-layer-list">
-            <article className="helix-layer-item"><span className="layer-n">01 /</span><h3>Ask something ambitious.</h3><p>Start with a question about a gene, condition, pathway, or complex biological process.</p><ArrowRight size={24} /></article>
-            <article className="helix-layer-item"><span className="layer-n">02 /</span><h3>Follow the evidence.</h3><p>Explore relevant literature and understand what sources support—and what remains uncertain.</p><ArrowRight size={24} /></article>
-            <article className="helix-layer-item"><span className="layer-n">03 /</span><h3>See the mechanism.</h3><p>Use interactive educational models to visualize processes that can be hard to understand from text alone.</p><ArrowRight size={24} /></article>
-            <article className="helix-layer-item"><span className="layer-n">04 /</span><h3>Connect the discoveries.</h3><p>Map biological relationships, form new questions, and save investigations for deeper research.</p><ArrowRight size={24} /></article>
+          <div className="helix-explode-layout">
+            <div className="helix-explode-stage" aria-label="Interactive exploded view of the four-layer Helix research engine">
+              <div className="helix-explode-head">
+                <span><span className="helix-live-dot" /> SYSTEM ARCHITECTURE / LIVE MODEL</span>
+                <span>SCROLL TO EXPLODE <ArrowRight size={12} /></span>
+              </div>
+              <div className="helix-explode-space">
+                <div className="helix-explode-halo" />
+                <div className="helix-explode-axis" />
+                {[0, 1, 2, 3].map((i) => (
+                  <div key={i} className={`helix-explode-layer layer-${i} ${activeLayer === i ? 'selected' : ''}`}>
+                    <div className="helix-explode-plane">
+                      <div className="helix-explode-grid" />
+                      {i === 0 ? <div className="helix-plane-center"><Search size={33} /><span>RESEARCH QUERY</span></div> : null}
+                      {i === 1 ? <div className="helix-plane-evidence"><i /><i /><i /><i /><i /><i /></div> : null}
+                      {i === 2 ? <div className="helix-plane-dna"><Dna size={70} strokeWidth={1.3} /></div> : null}
+                      {i === 3 ? <div className="helix-plane-network"><Network size={68} strokeWidth={1.2} /></div> : null}
+                    </div>
+                    <span className="helix-plane-tag">0{i + 1} / {['QUESTION', 'EVIDENCE', 'MECHANISM', 'CONNECTIONS'][i]}</span>
+                  </div>
+                ))}
+              </div>
+              <div className="helix-explode-foot"><span>HELIX / RESEARCH ENGINE</span><span>04 INTEGRATED LAYERS</span></div>
+            </div>
+            <div className="helix-explode-description">
+              <p className="helix-technical-label">EXPLORE THE ARCHITECTURE</p>
+              <h3>Four layers. <span>One scientific workflow.</span></h3>
+              <p className="helix-explode-lede">See how the parts of an investigation fit together. Scroll to separate the stack, then select any layer to explore its role.</p>
+              {[
+                ['Start with a question', 'Turn curiosity about a gene, disease, or pathway into a focused research direction.'],
+                ['Examine the evidence', 'Explore scientific literature, inspect sources, and separate supported claims from uncertainty.'],
+                ['Visualize the biology', 'Use educational models to understand mechanisms and biological processes.'],
+                ['Connect the discoveries', 'Map relationships between concepts, develop hypotheses, and save your research.'],
+              ].map(([name, description], i) => (
+                <button key={name} type="button" onClick={() => setActiveLayer(i)}
+                  className={`helix-explode-option ${activeLayer === i ? 'active' : ''}`}
+                  aria-pressed={activeLayer === i}>
+                  <span className="helix-explode-option-number">0{i + 1}</span>
+                  <span className="helix-explode-option-copy"><strong>{name}</strong><small>{description}</small></span>
+                  <ArrowRight size={18} />
+                </button>
+              ))}
+            </div>
           </div>
           <Link className="helix-layer-cta" to="/explore">ENTER THE RESEARCH EXPLORER <ArrowRight size={16} /></Link>
         </section>
