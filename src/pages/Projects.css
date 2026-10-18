@@ -183,4 +183,15 @@
       grid-template-columns: 1fr;
     }
   }
-  
+
+
+/* Helix Projects theme */
+.helix-projects-page { background:radial-gradient(circle at 85% 5%,rgba(100,161,246,.12),transparent 32%),#f7f9fd;color:#142b4d; }
+.helix-projects-nav { background:rgba(247,249,253,.9);border-bottom-color:#dce5f1; }
+.helix-projects-main { padding-top:35px; }
+.helix-projects-hero h1 { color:#142b4d; }
+.helix-projects-hero p { color:#64748b; }
+.helix-projects-eyebrow { color:#315dc3; }
+.helix-projects-search { background:white;border-color:#dce5f1;box-shadow:0 8px 30px rgba(31,73,134,.04); }
+.helix-projects-search input { color:#142b4d; }
+.helix-projects-hero button,.helix-projects-empty button { background:#234d9c;border-color:#234d9c; }
