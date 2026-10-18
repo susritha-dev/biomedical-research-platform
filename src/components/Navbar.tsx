@@ -30,7 +30,7 @@ export function Navbar() {
 
           .helix-premium-navbar .navbar-inner {
             width: min(1220px, calc(100% - 40px));
-            min-height: 86px;
+            min-height: 74px;
             margin: 0 auto;
             display: flex;
             align-items: center;
