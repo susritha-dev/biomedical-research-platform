@@ -26,6 +26,7 @@ import {
   analyzeResearchQuestion,
 } from '../utils/researchIntelligence'
 
+import { AnatomyModel3D } from './AnatomyModel3D'
 import './ResearchVisualization.css'
 
 interface ResearchVisualizationProps {
@@ -772,6 +773,7 @@ export function ResearchVisualization({
   )
 
   const [activeStepId, setActiveStepId] = useState(learningSteps[0]?.id || '')
+  const [viewMode, setViewMode] = useState<'3d' | 'diagram'>('3d')
 
   useEffect(() => {
     setActiveStepId(learningSteps[0]?.id || '')
@@ -906,13 +908,12 @@ export function ResearchVisualization({
           <section className="helix-model-visual-stage">
             <div className="helix-model-visual-top">
               <div>
-                <span>
-                  Interactive diagram
-                </span>
-
-                <strong>
-                  Click the numbered labels or use the lesson steps.
-                </strong>
+                <span>Interactive learning model</span>
+                <strong>{viewMode === '3d' ? 'Drag to rotate, scroll to zoom, or select a highlighted structure.' : 'Choose a numbered marker or lesson step.'}</strong>
+              </div>
+              <div className="helix-model-view-switch" role="group" aria-label="Model viewing mode">
+                <button type="button" aria-pressed={viewMode === '3d'} onClick={() => setViewMode('3d')}>3D model</button>
+                <button type="button" aria-pressed={viewMode === 'diagram'} onClick={() => setViewMode('diagram')}>Diagram</button>
               </div>
 
               <div className="helix-model-step-counter">
@@ -921,30 +922,22 @@ export function ResearchVisualization({
             </div>
 
             <div className="helix-model-visual-canvas">
-              <ModelDiagram
-                kind={visualKind}
-                activeStepId={activeStep?.id || ''}
-              />
-
-              {learningSteps.map((step) => (
-                <button
-                  key={step.id}
-                  type="button"
-                  className={
-                    step.id === activeStep?.id
-                      ? 'helix-model-hotspot helix-model-hotspot-active'
-                      : 'helix-model-hotspot'
-                  }
-                  style={{
-                    left: `${step.x}%`,
-                    top: `${step.y}%`,
-                  }}
-                  onClick={() => setActiveStepId(step.id)}
-                  aria-label={step.title}
-                >
-                  {step.label}
-                </button>
-              ))}
+              {viewMode === '3d' ? (
+                <AnatomyModel3D kind={visualKind} activeIndex={activeIndex}
+                  onSelect={(index) => setActiveStepId(learningSteps[index]?.id || activeStepId)} />
+              ) : (
+                <>
+                  <ModelDiagram kind={visualKind} activeStepId={activeStep?.id || ''} />
+                  {learningSteps.map((step) => (
+                    <button key={step.id} type="button"
+                      className={step.id === activeStep?.id ? 'helix-model-hotspot helix-model-hotspot-active' : 'helix-model-hotspot'}
+                      style={{left: `${step.x}%`,top: `${step.y}%`}}
+                      onClick={() => setActiveStepId(step.id)} aria-label={step.title}>
+                      {step.label}
+                    </button>
+                  ))}
+                </>
+              )}
             </div>
 
             <div className="helix-model-visual-controls">
