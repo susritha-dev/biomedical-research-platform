@@ -145,22 +145,53 @@ function dedupeArticles(articles) {
   return [...unique.values()]
 }
 
-function rankArticles(articles) {
-  return [...articles].sort((a, b) => {
-    const score = (article) =>
-      (article.provider === 'PubMed' ? 1000 : 0) +
-      (/meta-analysis|systematic review/i.test(article.type || '') ? 100 : 0) +
-      (/randomi[sz]ed|clinical trial|observational study/i.test(article.type || '') ? 50 : 0) +
-      Number(article.citationCount || 0) +
-      (article.abstract ? 20 : 0) +
-      (article.doi ? 10 : 0) +
-      (article.url ? 5 : 0)
 
-    const aScore = score(a)
-    const bScore = score(b)
-
-    return bScore - aScore
-  })
+const STOPWORDS = new Set('a an and are as at be between by can could does do for from how in is it its of on or our that the their these this to using via was were what when where which who why with affect affects associated association role evidence studies study research paper papers link linked relates relationship explain mechanism mechanisms'.split(' '))
+const ALIAS_GROUPS = [
+  ['amyotrophic lateral sclerosis', 'als'],
+  ['crispr cas9', 'crispr-cas9', 'cas9'],
+  ['alzheimer disease', 'alzheimers disease', 'alzheimer'],
+  ['parkinson disease', 'parkinsons disease', 'parkinson'],
+  ['tumor', 'tumour'],
+]
+function tokenize(value) {
+  return String(value || '').toLowerCase().replace(/<[^>]*>/g, ' ').replace(/[^a-z0-9]+/g, ' ').split(' ')
+    .filter((word) => word.length > 1 && !STOPWORDS.has(word))
+}
+function queryTerms(query) {
+  const input = String(query || '').toLowerCase()
+  const tokens = [...new Set(tokenize(input))]
+  for (const group of ALIAS_GROUPS) {
+    if (group.some((name) => input.includes(name))) {
+      for (const name of group) tokens.push(...tokenize(name))
+    }
+  }
+  return [...new Set(tokens)].slice(0, 24)
+}
+function relevanceAssessment(article, question) {
+  const terms = queryTerms(question)
+  if (!terms.length) return { score: 0, matchedTerms: [], coverage: 0 }
+  const title = new Set(tokenize(article.title))
+  const abstract = new Set(tokenize(article.abstract))
+  const matchedTerms = terms.filter((term) => title.has(term) || abstract.has(term))
+  const titleMatches = terms.filter((term) => title.has(term)).length
+  const coverage = matchedTerms.length / terms.length
+  // Match the user's biomedical concepts; citation popularity does not establish relevance.
+  const score = Math.round(coverage * 72 + (titleMatches / terms.length) * 24 +
+    (article.abstract ? 4 : 0))
+  return { score, matchedTerms, coverage: Number(coverage.toFixed(2)) }
+}
+function rankArticles(articles, question) {
+  return articles.map((article) => ({
+    ...article,
+    relevance: relevanceAssessment(article, question),
+  })).sort((a, b) =>
+    b.relevance.score - a.relevance.score ||
+    b.relevance.coverage - a.relevance.coverage ||
+    Number(Boolean(b.abstract)) - Number(Boolean(a.abstract)) ||
+    Number(Boolean(b.doi)) - Number(Boolean(a.doi)) ||
+    String(b.year).localeCompare(String(a.year))
+  )
 }
 
 async function searchSemanticScholar(query) {
@@ -450,30 +481,53 @@ export async function searchEvidence(query) {
     }
   }
 
-  const searches = await Promise.allSettled([
-    searchPubMed(cleanedQuery),
-    searchSemanticScholar(cleanedQuery),
-    searchOpenAlex(cleanedQuery),
-    searchCrossref(cleanedQuery),
-  ])
+  // Search the question as written. Long natural-language queries can dilute
+  // biomedical indexing, so also query with the key domain terms.
+  const focusedTerms = queryTerms(cleanedQuery).slice(0, 9)
+  const focusedQuery = focusedTerms.join(' ')
+  const providers = [
+    ['PubMed', searchPubMed],
+    ['Semantic Scholar', searchSemanticScholar],
+    ['OpenAlex', searchOpenAlex],
+    ['Crossref', searchCrossref],
+  ]
+  const searches = await Promise.allSettled(providers.map(async ([, search]) => {
+    const first = await search(cleanedQuery)
+    if (!focusedQuery || focusedQuery.toLowerCase() === cleanedQuery.toLowerCase()) return first
+    try {
+      const second = await search(focusedQuery)
+      return [...first, ...second]
+    } catch {
+      return first
+    }
+  }))
 
   const articles = []
   const errors = []
 
-  searches.forEach((result) => {
+  const sources = searches.map((result, i) => {
+    const name = providers[i][0]
     if (result.status === 'fulfilled') {
       articles.push(...result.value)
-    } else {
-      errors.push(result.reason?.message || 'A source failed.')
+      return { name, status: 'ok', count: result.value.length }
     }
+    const reason = result.reason?.message || 'Source unavailable.'
+    errors.push(`${name}: ${reason}`)
+    return { name, status: 'error', count: 0 }
   })
 
   const uniqueArticles = dedupeArticles(articles)
-  const rankedArticles = rankArticles(uniqueArticles).slice(0, 15)
-
+  const rankedArticles = rankArticles(uniqueArticles, cleanedQuery)
+  // Require meaningful matching rather than filling the page with loosely related citations.
+  const minimumMatch = queryTerms(cleanedQuery).length > 2 ? 25 : 15
+  const relevant = rankedArticles.filter((article) => article.relevance.score >= minimumMatch)
   return {
     query: cleanedQuery,
-    articles: rankedArticles,
+    searchTerms: queryTerms(cleanedQuery),
+    articles: relevant.slice(0, 24),
+    totalCandidates: uniqueArticles.length,
+    sources,
     errors,
+    note: 'Keyword relevance is a retrieval aid, not a validation of the paper or its conclusions.',
   }
 }
