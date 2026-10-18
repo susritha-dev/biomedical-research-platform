@@ -92,3 +92,24 @@ body {
 main {
   padding-bottom: 0;
 }
+
+
+/* Helix unified design tokens — marketing, authentication, and workspaces */
+:root {
+  font-family: 'DM Sans', sans-serif;
+  color: #142b4d;
+  background: #f7f9fd;
+  --background: #f7f9fd;
+  --surface: #ffffff;
+  --text: #142b4d;
+  --muted: #64748b;
+  --border: #dce5f1;
+  --accent: #315dc3;
+  --accent-soft: #eaf1ff;
+  --helix-navy: #10254b;
+  --helix-blue: #315dc3;
+  --helix-ice: #eaf1ff;
+  --helix-shadow: 0 16px 45px rgba(23, 53, 109, .08);
+}
+:focus-visible { outline: 3px solid #78b7ff; outline-offset: 3px; }
+::selection { background: #c6d9ff; color: #12264b; }
