@@ -4,7 +4,6 @@ import {
   Home,
   Lightbulb,
   Network,
-  Sparkles,
 } from 'lucide-react'
 
 import {
@@ -61,6 +60,14 @@ export function Navbar() {
               #253b75;
             color: #ffffff;
             box-shadow: 0 14px 30px rgba(37, 59, 117, 0.2);
+            overflow: hidden;
+            flex-shrink: 0;
+          }
+
+          .helix-brand-mark img {
+            display: block;
+            width: 100%;
+            height: 100%;
           }
 
           .helix-premium-navbar .nav-links {
@@ -157,7 +164,7 @@ export function Navbar() {
           className="brand"
         >
           <span className="helix-brand-mark">
-            <Sparkles size={17} />
+            <img src="/helix-logo.svg" alt="" width={34} height={34} />
           </span>
 
           Helix
