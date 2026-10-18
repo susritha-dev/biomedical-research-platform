@@ -13,10 +13,33 @@ import {
   Sparkles,
 } from 'lucide-react'
 
+import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { Navbar } from '../components/Navbar'
 
 export function Home() {
+  useEffect(() => {
+    if (typeof window === 'undefined' || !('IntersectionObserver' in window)) return
+    const root = document.querySelector('.helix-home-page')
+    if (!root) return
+    const targets = root.querySelectorAll<HTMLElement>(
+      '.helix-product-heading, .helix-workspace-preview, .helix-lab-heading, .helix-home-lab-image, .helix-feature-card, .helix-layer-intro, .helix-layer-item, .helix-usecase, .helix-flow-panel, .helix-faq-heading, .helix-faq-list, .helix-demo-card'
+    )
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-in-view')
+          observer.unobserve(entry.target)
+        }
+      })
+    }, { threshold: 0.08, rootMargin: '0px 0px -35px 0px' })
+    targets.forEach((target) => {
+      target.classList.add('helix-reveal')
+      observer.observe(target)
+    })
+    return () => observer.disconnect()
+  }, [])
+
   return (
     <div className="site-shell helix-home-page">
       <style>
@@ -1056,6 +1079,78 @@ export function Home() {
             .helix-usecase-section { padding: 28px 0 !important; }
             .helix-flow-panel { padding: 20px; }
           }
+
+          /* Studio-grade startup motion system */
+          .helix-home-page { --helix-ease: cubic-bezier(.22, 1, .36, 1); }
+          .helix-reveal {
+            opacity: 0;
+            transform: translate3d(0, 24px, 0);
+            transition: opacity .78s var(--helix-ease), transform .78s var(--helix-ease);
+          }
+          .helix-reveal.is-in-view { opacity: 1; transform: translate3d(0,0,0); }
+          .helix-feature-card.helix-reveal:nth-child(2),
+          .helix-layer-item.helix-reveal:nth-child(2),
+          .helix-usecase.helix-reveal:nth-child(2) { transition-delay: .09s; }
+          .helix-feature-card.helix-reveal:nth-child(3),
+          .helix-layer-item.helix-reveal:nth-child(3),
+          .helix-usecase.helix-reveal:nth-child(3) { transition-delay: .16s; }
+          .helix-feature-card.helix-reveal:nth-child(4),
+          .helix-layer-item.helix-reveal:nth-child(4) { transition-delay: .23s; }
+          .helix-hero-visual::after {
+            content: ''; position: absolute; inset: -60%; z-index: 1; pointer-events: none;
+            background: conic-gradient(from 0deg, transparent 0deg, rgba(68,169,246,.085) 55deg, transparent 110deg, transparent 220deg, rgba(93,212,245,.075) 290deg, transparent 360deg);
+            animation: helixAuroraSpin 28s linear infinite;
+          }
+          .helix-hero-spark-field { position: absolute; inset: 0; pointer-events: none; z-index: 2; overflow: hidden; }
+          .helix-hero-spark-field i {
+            position: absolute; width: 3px; height: 3px; border-radius: 50%;
+            background: #c1eeff; box-shadow: 0 0 11px 2px rgba(105,200,255,.7);
+            animation: helixSparkFloat 5s ease-in-out infinite;
+          }
+          .helix-hero-visual .helix-dna-stage { z-index: 3; }
+          .helix-hero-visual .helix-network-card { z-index: 5; }
+          .helix-hero-visual { transition: box-shadow .4s ease, border-color .4s ease; }
+          .helix-hero-visual:hover {
+            box-shadow: 0 42px 105px rgba(12,36,82,.3), inset 0 0 95px rgba(63,129,224,.13);
+            border-color: rgba(117,203,255,.5);
+          }
+          .helix-hero-visual:hover .helix-dna-svg { animation-duration: 4.6s; }
+          .helix-hero-search { transition: box-shadow .28s ease, border-color .28s ease, transform .28s ease; }
+          .helix-hero-search:hover { box-shadow: 0 24px 65px rgba(32,76,153,.19); border-color: #8fabdd; transform: translateY(-2px); }
+          .helix-feature-card::after, .helix-usecase::after {
+            content: ''; position: absolute; left: -35%; top: -75%; width: 70%; height: 220%;
+            background: linear-gradient(105deg, transparent 35%, rgba(138,200,255,.11) 50%, transparent 65%);
+            transform: rotate(16deg) translateX(-230%); pointer-events: none;
+            transition: transform .85s var(--helix-ease);
+          }
+          .helix-feature-card:hover::after, .helix-usecase:hover::after { transform: rotate(16deg) translateX(360%); }
+          .helix-usecase { position: relative; overflow: hidden; }
+          .helix-workspace-preview { transition: transform .55s var(--helix-ease), box-shadow .55s ease; }
+          .helix-workspace-preview:hover { transform: translateY(-5px); box-shadow: 0 42px 100px rgba(16,38,82,.2); }
+          .helix-workspace-tabs span { transition: transform .2s ease, background .2s ease; }
+          .helix-workspace-tabs span:hover { transform: translateY(-2px); }
+          .helix-preview-card { transition: transform .25s var(--helix-ease), border-color .25s ease; }
+          .helix-preview-card:hover { transform: translateY(-4px); border-color: #9dc5fa; }
+          .helix-home-lab-image img { transition: transform 1.3s var(--helix-ease); }
+          .helix-home-lab-image:hover img { transform: scale(1.045); }
+          .helix-layer-item > svg { transition: transform .3s var(--helix-ease); }
+          .helix-layer-item:hover > svg { transform: translateX(7px) rotate(-25deg); }
+          .helix-hero .helix-eyebrow > svg { animation: helixIconTwinkle 3.2s ease-in-out infinite; }
+          .helix-primary-button, .helix-hero-search a, .helix-layer-cta, .helix-demo-actions a { position: relative; overflow: hidden; }
+          @keyframes helixAuroraSpin { to { transform: rotate(360deg); } }
+          @keyframes helixSparkFloat {
+            0%,100% { transform: translateY(5px) scale(.6); opacity: .25; }
+            50% { transform: translateY(-13px) scale(1.6); opacity: .95; }
+          }
+          @keyframes helixIconTwinkle {
+            0%,100% { transform: scale(1) rotate(0deg); opacity: .75; }
+            50% { transform: scale(1.2) rotate(18deg); opacity: 1; }
+          }
+          @media (prefers-reduced-motion: reduce) {
+            .helix-reveal, .helix-reveal.is-in-view { opacity: 1 !important; transform: none !important; transition: none !important; }
+            .helix-hero-visual::after, .helix-hero-spark-field i, .helix-hero .helix-eyebrow > svg { animation: none !important; }
+            .helix-home-page * { scroll-behavior: auto !important; }
+          }
           @keyframes helixFadeUp {
             from {
               opacity: 0;
@@ -1234,6 +1329,16 @@ export function Home() {
             aria-label="Helix research visualization preview"
           >
             <div className="helix-visual-grid" />
+            <div className="helix-hero-spark-field" aria-hidden="true">
+              {Array.from({ length: 18 }, (_, i) => (
+                <i key={i} style={{
+                  left: `${8 + (i * 47) % 84}%`,
+                  top: `${6 + (i * 31) % 86}%`,
+                  animationDelay: `${i * -0.39}s`,
+                  animationDuration: `${3.2 + (i % 5) * 0.7}s`,
+                }} />
+              ))}
+            </div>
             <div className="helix-orbit" />
             <div className="helix-orbit helix-orbit-two" />
 
