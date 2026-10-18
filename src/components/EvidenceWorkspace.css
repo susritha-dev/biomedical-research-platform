@@ -594,3 +594,12 @@
     transform: rotate(360deg);
   }
 }
+
+
+/* Helix evidence workspace theme */
+.helix-evidence-page { background:radial-gradient(circle at 10% 4%,rgba(86,137,228,.12),transparent 28%),#f7f9fd; }
+.helix-evidence-hero-copy,.helix-evidence-command-card,.helix-evidence-panel-card,.helix-evidence-score-card,.helix-source-card { border-color:#dce5f1;background:#fff;box-shadow:0 16px 45px rgba(23,53,109,.06); }
+.helix-evidence-hero-copy h2,.helix-evidence-command-card strong,.helix-evidence-score-card strong { color:#142b4d; }
+.helix-evidence-hero-copy p { color:#64748b; }
+.helix-evidence-eyebrow,.helix-evidence-command-card span { color:#315dc3; }
+.helix-evidence-command-card button { background:#234d9c;border-color:#234d9c; }
