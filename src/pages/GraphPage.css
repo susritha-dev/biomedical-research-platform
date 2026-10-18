@@ -282,3 +282,14 @@
     padding: 8px 14px;
   }
 }
+
+
+/* Helix knowledge graph theme */
+.kg-page { background:#f7f9fd; }
+.kg-header,.kg-search-bar { background:#fff;border-color:#dce5f1; }
+.kg-header-brand { color:#173559;font-weight:900; }
+.kg-header-title,.kg-header-back { color:#667a95; }
+.kg-search-input-wrap { border-color:#dce5f1;background:#f8faff;border-radius:10px; }
+.kg-search-input-wrap:focus-within { border-color:#5386d8;box-shadow:0 0 0 3px rgba(84,134,217,.1); }
+.kg-search-input { color:#142b4d; }
+.kg-search-dropdown { border-color:#dce5f1;box-shadow:var(--helix-shadow);border-radius:12px; }
