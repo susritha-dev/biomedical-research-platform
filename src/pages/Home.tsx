@@ -812,6 +812,89 @@ export function Home() {
             .helix-hero h1 { letter-spacing: -2px; }
           }
 
+
+          /* Product-led startup sections */
+          .helix-trust-strip {
+            display: flex; align-items: center; justify-content: space-between;
+            gap: 16px; flex-wrap: wrap; margin: -18px 0 70px;
+            padding: 21px 25px; border: 1px solid #e1e8f4;
+            border-radius: 18px; background: rgba(255,255,255,.87);
+            color: #6b7891; box-shadow: 0 16px 48px rgba(25,53,106,.045);
+          }
+          .helix-trust-strip strong { color: #19345c; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; }
+          .helix-trust-points { display: flex; flex-wrap: wrap; gap: 12px 22px; }
+          .helix-trust-points span { display: inline-flex; gap: 7px; align-items: center; font-size: 12px; font-weight: 750; }
+          .helix-trust-points svg { color: #2d7a9c; }
+          .helix-product-section { padding: 40px 0 105px; }
+          .helix-product-heading { text-align: center; max-width: 790px; margin: 0 auto 38px; }
+          .helix-product-heading h2, .helix-usecase-heading h2, .helix-faq-heading h2 {
+            margin: 10px 0 16px; color: #102442; font-size: clamp(36px, 5vw, 64px); letter-spacing: -2px; line-height: 1.06;
+          }
+          .helix-product-heading > p:last-child, .helix-usecase-heading > p:last-child, .helix-faq-heading > p:last-child {
+            color: #62738d; font-size: 16px; line-height: 1.8;
+          }
+          .helix-workspace-preview {
+            overflow: hidden; border-radius: 24px; border: 1px solid #d7e2f0;
+            background: white; box-shadow: 0 35px 90px rgba(16,38,82,.13);
+          }
+          .helix-workspace-top {
+            display: flex; align-items: center; justify-content: space-between; gap: 12px;
+            padding: 13px 20px; background: #f6f8fc; border-bottom: 1px solid #e3eaf4;
+          }
+          .helix-workspace-dots { display: flex; gap: 6px; }
+          .helix-workspace-dots i { width: 9px; height: 9px; background: #b9c5d8; border-radius: 50%; }
+          .helix-workspace-dots i:first-child { background: #f3aaa4; }
+          .helix-workspace-dots i:nth-child(2) { background: #f2ce83; }
+          .helix-workspace-dots i:last-child { background: #91d5bc; }
+          .helix-workspace-top span { font-size: 11px; font-weight: 750; color: #63738d; }
+          .helix-workspace-layout { display: grid; grid-template-columns: 190px minmax(0,1fr); min-height: 390px; }
+          .helix-workspace-sidebar { background: #10254b; padding: 24px 16px; color: #e5edff; }
+          .helix-workspace-sidebar strong { font-size: 17px; letter-spacing: -.5px; }
+          .helix-workspace-sidebar p { margin: 5px 0 26px; font-size: 10px; color: #9bb4db; }
+          .helix-workspace-sidebar span {
+            display: block; padding: 10px 12px; margin: 5px 0; border-radius: 9px;
+            font-size: 12px; color: #aec6e8; font-weight: 750;
+          }
+          .helix-workspace-sidebar .is-active { background: rgba(112,167,255,.18); color: #fff; }
+          .helix-workspace-content { min-width: 0; padding: clamp(18px,3vw,36px); background: linear-gradient(150deg,#fff,#f7faff); }
+          .helix-workspace-overline { color: #3e69ad; font-size: 10px; font-weight: 850; letter-spacing: 1px; text-transform: uppercase; }
+          .helix-workspace-content h3 { margin: 9px 0 12px; font-size: clamp(20px,3vw,30px); color: #152e51; letter-spacing: -.7px; }
+          .helix-workspace-content > p { color: #6c7c92; font-size: 13px; line-height: 1.65; }
+          .helix-workspace-tabs { display: flex; gap: 7px; flex-wrap: wrap; margin: 24px 0 20px; }
+          .helix-workspace-tabs span { padding: 8px 13px; border: 1px solid #e1e9f4; background: #fff; border-radius: 9px; font-size: 11px; font-weight: 800; color: #5d6f8c; }
+          .helix-workspace-tabs span:first-child { background: #204684; color: #fff; border-color: #204684; }
+          .helix-preview-cards { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 12px; }
+          .helix-preview-card { border: 1px solid #e2e9f3; border-radius: 14px; padding: 17px; background: #fff; }
+          .helix-preview-card > span { display: block; font-size: 10px; color: #4c71b4; text-transform: uppercase; font-weight: 850; letter-spacing: .6px; }
+          .helix-preview-card strong { display: block; margin: 12px 0 7px; color: #193555; font-size: 15px; }
+          .helix-preview-card p { margin: 0; color: #738199; font-size: 11px; line-height: 1.6; }
+          .helix-preview-link { display: inline-flex; align-items: center; gap: 7px; margin-top: 24px; color: #2856aa; font-size: 13px; font-weight: 850; text-decoration: none; }
+          .helix-usecase-section { padding: 65px 0 95px; }
+          .helix-usecase-heading { max-width: 760px; margin-bottom: 30px; }
+          .helix-usecase-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 18px; }
+          .helix-usecase { padding: 30px; border: 1px solid #dce5f1; border-radius: 23px; background: #fff; box-shadow: 0 18px 50px rgba(23,56,105,.045); transition: transform .2s, box-shadow .2s; }
+          .helix-usecase:hover { transform: translateY(-5px); box-shadow: 0 28px 60px rgba(23,56,105,.10); }
+          .helix-usecase-num { display: inline-grid; place-items: center; height: 42px; width: 42px; border-radius: 13px; background: #eaf0ff; color: #3b63ae; font-size: 14px; font-weight: 900; }
+          .helix-usecase h3 { margin: 22px 0 10px; color: #183253; font-size: 21px; letter-spacing: -.4px; }
+          .helix-usecase p { margin: 0; color: #64758e; font-size: 13px; line-height: 1.8; }
+          .helix-usecase a { display: inline-flex; gap: 7px; align-items: center; color: #345faf; font-size: 12px; font-weight: 850; margin-top: 22px; text-decoration: none; }
+          .helix-faq-section { padding: 45px 0 95px; display: grid; grid-template-columns: .85fr 1.15fr; gap: 55px; align-items: start; }
+          .helix-faq-list { border-top: 1px solid #dce4ef; }
+          .helix-faq-list details { padding: 20px 0; border-bottom: 1px solid #dce4ef; }
+          .helix-faq-list summary { cursor: pointer; color: #183251; font-size: 15px; font-weight: 850; }
+          .helix-faq-list details p { margin: 13px 0 0; color: #64758e; font-size: 13px; line-height: 1.75; }
+          @media(max-width:860px) {
+            .helix-workspace-layout { grid-template-columns: 145px minmax(0,1fr); }
+            .helix-preview-cards { grid-template-columns: 1fr; }
+            .helix-usecase-grid { grid-template-columns: 1fr; }
+            .helix-faq-section { grid-template-columns: 1fr; gap: 20px; }
+          }
+          @media(max-width:560px) {
+            .helix-trust-strip { margin-top: 0; }
+            .helix-workspace-layout { grid-template-columns: 1fr; }
+            .helix-workspace-sidebar { display: none; }
+            .helix-workspace-top { padding: 12px; }
+          }
           @keyframes helixFadeUp {
             from {
               opacity: 0;
@@ -1060,6 +1143,52 @@ export function Home() {
           </div>
         </section>
 
+
+        <div className="helix-trust-strip" aria-label="Helix platform principles">
+          <strong>Built for curious minds</strong>
+          <div className="helix-trust-points">
+            <span><ShieldCheck size={15} /> Evidence-aware exploration</span>
+            <span><Network size={15} /> Connected concepts</span>
+            <span><FolderKanban size={15} /> Save and revisit research</span>
+          </div>
+        </div>
+
+        <section className="helix-product-section" aria-labelledby="workspace-preview-title">
+          <div className="helix-product-heading">
+            <p className="helix-eyebrow"><Sparkles size={15} /> Meet your research workspace</p>
+            <h2 id="workspace-preview-title">One question. A clearer path through the science.</h2>
+            <p>Go from a complex biomedical question to a structured investigation. Explore mechanisms, inspect supporting literature, visualize key ideas, and keep your work organized.</p>
+          </div>
+          <div className="helix-workspace-preview" aria-label="Illustrative preview of the Helix research workspace">
+            <div className="helix-workspace-top">
+              <div className="helix-workspace-dots" aria-hidden="true"><i /><i /><i /></div>
+              <span>HELIX / RESEARCH WORKSPACE</span>
+              <span>Illustrative preview</span>
+            </div>
+            <div className="helix-workspace-layout">
+              <aside className="helix-workspace-sidebar">
+                <strong>Helix</strong>
+                <p>Biomedical research explorer</p>
+                <span className="is-active">Research Agent</span>
+                <span>Evidence</span>
+                <span>Science Models</span>
+                <span>Connections</span>
+              </aside>
+              <div className="helix-workspace-content">
+                <span className="helix-workspace-overline">Example investigation</span>
+                <h3>How is SOD1 connected to ALS?</h3>
+                <p>Follow a research question from its biological context to evidence and mechanisms. This is an interface illustration, not a research result.</p>
+                <div className="helix-workspace-tabs"><span>Research plan</span><span>Evidence</span><span>Model</span><span>Connections</span></div>
+                <div className="helix-preview-cards">
+                  <div className="helix-preview-card"><span>01 / Understand</span><strong>Frame the question</strong><p>Identify the concepts, scope, and research direction.</p></div>
+                  <div className="helix-preview-card"><span>02 / Investigate</span><strong>Examine sources</strong><p>Explore relevant literature and verify important claims.</p></div>
+                  <div className="helix-preview-card"><span>03 / Connect</span><strong>Build a model</strong><p>Visualize relationships and possible mechanisms.</p></div>
+                </div>
+                <Link className="helix-preview-link" to="/explore">Open the real workspace <ArrowRight size={15} /></Link>
+              </div>
+            </div>
+          </div>
+        </section>
         <section className="helix-lab-showcase">
           <div className="helix-lab-heading">
             <p className="helix-eyebrow">
@@ -1177,6 +1306,34 @@ export function Home() {
           </div>
         </section>
 
+
+        <section className="helix-usecase-section" aria-labelledby="usecases-title">
+          <div className="helix-usecase-heading">
+            <p className="helix-eyebrow"><Dna size={15} /> Made for exploration</p>
+            <h2 id="usecases-title">Serious curiosity deserves better tools.</h2>
+            <p>Whether you're learning new biology or shaping your next research idea, Helix brings useful structure to the process of asking better questions.</p>
+          </div>
+          <div className="helix-usecase-grid">
+            <article className="helix-usecase">
+              <span className="helix-usecase-num">01</span>
+              <h3>Students & science learners</h3>
+              <p>Break down difficult concepts, explore biological processes, and build an intuitive understanding of scientific mechanisms.</p>
+              <Link to="/explore">Explore a question <ArrowRight size={15} /></Link>
+            </article>
+            <article className="helix-usecase">
+              <span className="helix-usecase-num">02</span>
+              <h3>Early-stage researchers</h3>
+              <p>Structure a topic, map possible connections, and organize hypotheses for closer investigation with primary sources.</p>
+              <Link to="/hypotheses">Explore hypotheses <ArrowRight size={15} /></Link>
+            </article>
+            <article className="helix-usecase">
+              <span className="helix-usecase-num">03</span>
+              <h3>Curious innovators</h3>
+              <p>See where genes, pathways, and research concepts intersect to identify questions worth exploring further.</p>
+              <Link to="/graph">Explore connections <ArrowRight size={15} /></Link>
+            </article>
+          </div>
+        </section>
         <section
           className="helix-flow-section"
           id="how-it-works"
@@ -1283,6 +1440,32 @@ export function Home() {
           </div>
         </section>
 
+
+        <section className="helix-faq-section" aria-labelledby="faq-title">
+          <div className="helix-faq-heading">
+            <p className="helix-eyebrow"><ShieldCheck size={15} /> The details</p>
+            <h2 id="faq-title">Research clearly. Think critically.</h2>
+            <p>Helix is designed to support scientific learning and exploration—not replace primary literature, expert review, or experimental validation.</p>
+          </div>
+          <div className="helix-faq-list">
+            <details open>
+              <summary>What can I investigate with Helix?</summary>
+              <p>Try questions about genes, diseases, molecular mechanisms, cellular pathways, and other biomedical topics. The workspace helps organize your exploration.</p>
+            </details>
+            <details>
+              <summary>Does Helix verify every scientific claim?</summary>
+              <p>No. AI-generated interpretations can be incorrect. Review the original sources and independently validate important claims before relying on them.</p>
+            </details>
+            <details>
+              <summary>Can I return to a research project later?</summary>
+              <p>Helix supports locally saved investigations in your browser. Storage is device- and browser-specific, so it is not the same as cloud synchronization.</p>
+            </details>
+            <details>
+              <summary>Is Helix intended for medical advice?</summary>
+              <p>No. Helix is an educational research tool and does not provide diagnosis, treatment advice, or clinical decision support.</p>
+            </details>
+          </div>
+        </section>
         <section className="helix-demo-section">
           <div className="helix-demo-card">
             <div>
