@@ -805,7 +805,7 @@ export function Home() {
 
           <div className="helix-home-lab-image">
             <img
-              src="/helix-lab.webp"
+              src="/helix-lab.jpg"
               alt="Biomedical laboratory research environment"
               loading="lazy"
             />
