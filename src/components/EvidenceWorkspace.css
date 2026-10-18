@@ -603,3 +603,10 @@
 .helix-evidence-hero-copy p { color:#64748b; }
 .helix-evidence-eyebrow,.helix-evidence-command-card span { color:#315dc3; }
 .helix-evidence-command-card button { background:#234d9c;border-color:#234d9c; }
+
+
+/* Transparent multi-database retrieval status */
+.helix-evidence-provider-status { display:flex; flex-wrap:wrap; align-items:center; gap:9px; margin:0 0 16px; }
+.helix-evidence-provider-status span { display:inline-flex; align-items:center; gap:6px; border:1px solid #d9e6f6; background:#fff; padding:9px 12px; border-radius:12px; color:#275381; font-size:12px; font-weight:800; }
+.helix-evidence-provider-status .helix-provider-ok { border-color:#cce6d9; color:#1e6d53; }
+.helix-evidence-provider-status .helix-provider-error { border-color:#eed0c9; color:#9a4435; }
