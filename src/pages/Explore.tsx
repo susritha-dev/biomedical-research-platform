@@ -797,10 +797,11 @@ export default function Explore() {
           {saveMessage && <span role="status">{saveMessage}</span>}
         </div>
 
-        <nav className="helix-explore-tabs">
+        <nav className="helix-explore-tabs" aria-label="Research workspace sections">
           <button
             type="button"
             className={activeTab === 'agent' ? 'helix-explore-tab-active' : ''}
+            aria-current={activeTab === 'agent' ? 'page' : undefined}
             onClick={() => setActiveTab('agent')}
           >
             <Sparkles size={16} />
@@ -811,6 +812,7 @@ export default function Explore() {
           <button
             type="button"
             className={activeTab === 'evidence' ? 'helix-explore-tab-active' : ''}
+            aria-current={activeTab === 'evidence' ? 'page' : undefined}
             onClick={() => setActiveTab('evidence')}
           >
             <BookOpen size={16} />
@@ -821,6 +823,7 @@ export default function Explore() {
           <button
             type="button"
             className={activeTab === 'visualize' ? 'helix-explore-tab-active' : ''}
+            aria-current={activeTab === 'visualize' ? 'page' : undefined}
             onClick={() => setActiveTab('visualize')}
           >
             <FlaskConical size={16} />
@@ -831,6 +834,7 @@ export default function Explore() {
           <button
             type="button"
             className={activeTab === 'connections' ? 'helix-explore-tab-active' : ''}
+            aria-current={activeTab === 'connections' ? 'page' : undefined}
             onClick={() => setActiveTab('connections')}
           >
             <Network size={16} />
@@ -840,16 +844,21 @@ export default function Explore() {
         </nav>
       </header>
 
+      <div className="helix-workspace-location" aria-live="polite">
+        <span>RESEARCH WORKSPACE</span>
+        <strong>{activeTab === 'agent' ? 'Overview & agent' : activeTab === 'evidence' ? 'Scientific evidence' : activeTab === 'visualize' ? 'Biological model' : 'Research connections'}</strong>
+        <span className="helix-workspace-location-hint">Select any section above to switch views</span>
+      </div>
       <section className="helix-explore-content">
         {graphContext && <GraphContextBanner context={graphContext} />}
-        {activeTab === 'agent' && (
+        <div className="helix-workspace-agent-panel" hidden={activeTab !== 'agent'}>
           <AgentResearchWorkspace
             map={map}
             onOpenEvidence={() => setActiveTab('evidence')}
             onOpenConnections={() => setActiveTab('connections')}
             onOpenModel={() => setActiveTab('visualize')}
           />
-        )}
+        </div>
 
         {activeTab === 'evidence' && (
           <EvidenceWorkspace
