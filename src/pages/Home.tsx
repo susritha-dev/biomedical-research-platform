@@ -3,7 +3,6 @@ import {
   ArrowRight,
   Atom,
   BookOpen,
-  Brain,
   Dna,
   FolderKanban,
   FlaskConical,
@@ -272,6 +271,91 @@ export function Home() {
           .card-two { top: 11%; right: 6%; animation-delay: 0.7s; }
           .card-three { bottom: 10%; left: 6%; animation-delay: 1.4s; }
           .card-four { bottom: 9%; right: 7%; animation-delay: 2s; }
+
+
+          /* Animated DNA hero — consistent with Helix's light blue / ivory theme */
+          .helix-hero-visual {
+            isolation: isolate;
+            background:
+              radial-gradient(ellipse at 50% 48%, rgba(100, 148, 245, .21) 0%, transparent 48%),
+              radial-gradient(circle at 85% 15%, rgba(130, 209, 245, .18), transparent 42%),
+              linear-gradient(145deg, #ffffff, #edf3fc);
+          }
+          .helix-visual-grid { opacity: .55; }
+          .helix-dna-stage {
+            position: relative;
+            z-index: 2;
+            width: min(53%, 245px);
+            height: 430px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+          }
+          .helix-dna-aura {
+            position: absolute;
+            inset: 15% -20%;
+            border-radius: 50%;
+            background: radial-gradient(ellipse, rgba(95, 143, 240, .28), transparent 68%);
+            filter: blur(18px);
+            animation: helixDnaBreathe 5s ease-in-out infinite;
+          }
+          .helix-dna-svg {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+            filter: drop-shadow(0 18px 24px rgba(39, 77, 155, .22));
+            animation: helixDnaFloat 7s ease-in-out infinite;
+          }
+          .helix-dna-rung {
+            animation: helixDnaShimmer 3.4s ease-in-out infinite;
+          }
+          .helix-dna-label {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap;
+            padding: 8px 12px;
+            border: 1px solid rgba(69, 109, 197, .2);
+            border-radius: 999px;
+            background: rgba(255, 255, 255, .83);
+            color: #3157a7;
+            font-size: 9px;
+            font-weight: 850;
+            letter-spacing: 1px;
+            box-shadow: 0 12px 24px rgba(40, 64, 127, .07);
+          }
+          .helix-live-dot {
+            display: inline-block;
+            width: 7px;
+            height: 7px;
+            margin-right: 6px;
+            background: #36b8ac;
+            border-radius: 50%;
+            box-shadow: 0 0 0 3px rgba(54, 184, 172, .15);
+          }
+          @keyframes helixDnaFloat {
+            0%, 100% { transform: translateY(0) rotate(-3deg) scale(1); }
+            50% { transform: translateY(-15px) rotate(3deg) scale(1.035); }
+          }
+          @keyframes helixDnaBreathe {
+            0%, 100% { opacity: .55; transform: scale(.9); }
+            50% { opacity: 1; transform: scale(1.1); }
+          }
+          @keyframes helixDnaShimmer {
+            0%, 100% { opacity: .55; }
+            50% { opacity: 1; }
+          }
+          @media (prefers-reduced-motion: reduce) {
+            .helix-dna-svg, .helix-dna-aura, .helix-dna-rung,
+            .helix-orbit, .helix-network-card { animation: none !important; }
+          }
+          @media (max-width: 520px) {
+            .helix-dna-stage { width: 45%; height: 340px; }
+            .helix-dna-label { font-size: 7px; letter-spacing: .3px; }
+          }
 
           .helix-lab-showcase {
             padding: 40px 0 85px;
@@ -754,8 +838,45 @@ export function Home() {
             <div className="helix-orbit" />
             <div className="helix-orbit helix-orbit-two" />
 
-            <div className="helix-core">
-              <Brain />
+            <div className="helix-dna-stage" aria-hidden="true">
+              <div className="helix-dna-aura" />
+              <svg className="helix-dna-svg" viewBox="0 0 260 430" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="dna-strand-a" x1="40" y1="0" x2="215" y2="420">
+                    <stop stopColor="#3B6BDB" />
+                    <stop offset=".5" stopColor="#91D8FF" />
+                    <stop offset="1" stopColor="#3761C6" />
+                  </linearGradient>
+                  <linearGradient id="dna-strand-b" x1="210" y1="0" x2="45" y2="420">
+                    <stop stopColor="#92B7FF" />
+                    <stop offset=".5" stopColor="#4768D0" />
+                    <stop offset="1" stopColor="#9DE9FF" />
+                  </linearGradient>
+                  <filter id="dna-glow" x="-50%" y="-50%" width="200%" height="200%">
+                    <feGaussianBlur stdDeviation="4" />
+                  </filter>
+                </defs>
+                <g className="helix-dna-glow" filter="url(#dna-glow)" opacity=".45">
+                  <path d="M78 20 C210 75 210 135 130 210 C50 285 50 345 182 410" stroke="#518AFF" strokeWidth="17" strokeLinecap="round" />
+                  <path d="M182 20 C50 75 50 135 130 210 C210 285 210 345 78 410" stroke="#8FE9FF" strokeWidth="17" strokeLinecap="round" />
+                </g>
+                {Array.from({ length: 17 }, (_, i) => {
+                  const y = 24 + i * 24;
+                  const x1 = 130 - 68 * Math.cos((i / 16) * Math.PI * 2);
+                  const x2 = 130 + 68 * Math.cos((i / 16) * Math.PI * 2);
+                  return (
+                    <g key={i} className="helix-dna-rung" style={{ animationDelay: `${i * -0.13}s` }}>
+                      <line x1={x1} x2={x2} y1={y} y2={y} stroke={i % 2 ? '#79CCF8' : '#86A3F5'} strokeWidth="5" strokeLinecap="round" opacity=".72" />
+                      <circle cx={x1} cy={y} r="4" fill="#B4E9FF" />
+                      <circle cx={x2} cy={y} r="4" fill="#8FA9FF" />
+                    </g>
+                  );
+                })}
+                <path d="M78 20 C210 75 210 135 130 210 C50 285 50 345 182 410" stroke="url(#dna-strand-a)" strokeWidth="11" strokeLinecap="round" />
+                <path d="M182 20 C50 75 50 135 130 210 C210 285 210 345 78 410" stroke="url(#dna-strand-b)" strokeWidth="11" strokeLinecap="round" />
+                <path d="M78 20 C210 75 210 135 130 210 C50 285 50 345 182 410" stroke="#D5F3FF" strokeWidth="2" strokeLinecap="round" opacity=".75" />
+              </svg>
+              <div className="helix-dna-label"><span className="helix-live-dot" /> LIVE RESEARCH VISUALIZATION</div>
             </div>
 
             <article className="helix-network-card card-one">
