@@ -436,3 +436,34 @@
   .helix-agent-grid { grid-template-columns: 1fr; }
   .helix-agent-panel h2 { font-size: clamp(26px, 8vw, 36px); }
 }
+
+
+/* Post-investigation results dashboard */
+.helix-results-dashboard { display:grid; gap:16px; width:100%; max-width:1220px; }
+.helix-results-welcome { padding:4px 0 2px; }
+.helix-results-welcome .helix-agent-label { display:inline-flex; align-items:center; gap:7px; color:#3463b0; }
+.helix-results-welcome h2 { margin:9px 0 8px; font-size:clamp(27px,3vw,42px); line-height:1.08; letter-spacing:-.04em; color:#142b4d; }
+.helix-results-welcome p { margin:0; color:#64748b; line-height:1.55; font-size:14px; }
+.helix-results-stats { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px; }
+.helix-results-stats > div,.helix-results-card { background:#fff; border:1px solid #dce5f1; border-radius:15px; box-shadow:0 8px 30px rgba(24,59,116,.045); }
+.helix-results-stats > div { display:grid; gap:11px; padding:19px; }
+.helix-results-stats span { color:#71829b; font-size:11px; font-weight:750; }
+.helix-results-stats strong { color:#183960; font-size:clamp(20px,2.5vw,29px); line-height:1.05; letter-spacing:-.03em; }
+.helix-results-main-grid { display:grid; grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr); gap:14px; }
+.helix-results-card { padding:23px; min-width:0; }
+.helix-results-card h3 { color:#142b4d; font-size:clamp(20px,2.4vw,29px); line-height:1.17; letter-spacing:-.035em; margin:15px 0 10px; }
+.helix-results-card p { color:#526783; font-size:14px; line-height:1.7; margin:8px 0; }
+.helix-results-finding { background:linear-gradient(155deg,#fff,#f0f6ff); }
+.helix-results-finding > small { display:block; margin-top:18px; color:#697b95; font-size:11px; line-height:1.5; }
+.helix-results-links { display:grid; gap:5px; margin-top:15px; }
+.helix-results-links button { width:100%; border:1px solid transparent; border-radius:10px; background:transparent; display:grid; grid-template-columns:24px minmax(0,1fr) 18px; align-items:center; gap:12px; text-align:left; padding:13px 10px; cursor:pointer; color:#315dc3; transition:background .2s,border-color .2s; }
+.helix-results-links button:hover,.helix-results-links button:focus-visible { background:#edf4ff; border-color:#d4e4fa; }
+.helix-results-links button span { display:grid; gap:4px; }
+.helix-results-links button strong { color:#1c395b; font-size:13px; }
+.helix-results-links button small { color:#73849a; font-size:11px; }
+.helix-results-notes { padding:19px 23px; }
+.helix-results-notes details { border-top:1px solid #e2e9f3; margin-top:12px; padding-top:12px; }
+.helix-results-notes summary { cursor:pointer; font-size:12px; color:#315894; font-weight:750; }
+.helix-results-notes li { color:#5c708b; line-height:1.6; font-size:12px; margin:7px 0; }
+@media(max-width:850px){.helix-results-stats{grid-template-columns:repeat(2,minmax(0,1fr));}.helix-results-main-grid{grid-template-columns:1fr;}}
+@media(max-width:480px){.helix-results-stats>div{padding:13px;}.helix-results-card{padding:16px;}}
