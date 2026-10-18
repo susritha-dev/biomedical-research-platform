@@ -58,6 +58,9 @@ interface EvidenceApiResponse {
   query: string
   articles: EvidenceArticle[]
   errors: string[]
+  sources?: Array<{ name: string; status: string; count: number }>
+  searchTerms?: string[]
+  totalCandidates?: number
 }
 
 function cleanQuestion(question: string) {
@@ -143,29 +146,8 @@ function findNode(nodes: ResearchNode[], id: string) {
   return nodes.find((node) => node.id === id)
 }
 
-function getImportantConcepts(map: ResearchMap) {
-  return map.nodes
-    .filter(
-      (node) =>
-        node.type !== 'question' &&
-        node.label.length > 1,
-    )
-    .slice(0, 5)
-}
-
 function buildEvidenceQuery(map: ResearchMap) {
-  const question = cleanQuestion(map.question)
-
-  const concepts = getImportantConcepts(map)
-    .slice(0, 3)
-    .map((node) => node.label)
-    .join(' ')
-
-  if (concepts) {
-    return `${question} ${concepts}`
-  }
-
-  return question
+  return cleanQuestion(map.question)
 }
 
 function getAuthorsText(authors: string[]) {
@@ -200,6 +182,7 @@ export function EvidenceWorkspace({
 }: EvidenceWorkspaceProps) {
   const [articles, setArticles] = useState<EvidenceArticle[]>([])
   const [errors, setErrors] = useState<string[]>([])
+  const [sources, setSources] = useState<Array<{ name: string; status: string; count: number }>>([])
   const [isLoading, setIsLoading] = useState(false)
   const [apiError, setApiError] = useState<string | null>(null)
 
@@ -227,6 +210,7 @@ export function EvidenceWorkspace({
       setIsLoading(true)
       setApiError(null)
       setErrors([])
+      setSources([])
       setArticles([])
 
       try {
@@ -248,6 +232,7 @@ export function EvidenceWorkspace({
         if (!cancelled) {
           setArticles(data.articles || [])
           setErrors(data.errors || [])
+          setSources(data.sources || [])
         }
       } catch (error) {
         console.error('Evidence frontend error:', error)
@@ -319,6 +304,22 @@ export function EvidenceWorkspace({
           </aside>
         </div>
 
+        {sources.length > 0 && (
+          <div className="helix-evidence-provider-status" aria-label="Scholarly database search status">
+            {sources.map((source) => (
+              <span key={source.name} className={source.status === 'ok' ? 'helix-provider-ok' : 'helix-provider-error'}>
+                <Database size={14} />
+                {source.name}: {source.status === 'ok' ? `${source.count} retrieved` : 'unavailable'}
+              </span>
+            ))}
+          </div>
+        )}
+        {errors.length > 0 && (
+          <div className="helix-source-why" role="status">
+            <strong>Some databases could not be reached</strong>
+            <p>{errors.join(' • ')} Results from available databases are shown; coverage may be incomplete.</p>
+          </div>
+        )}
         <div className="helix-evidence-scoreboard">
           <article className="helix-evidence-score-card helix-score-strong">
             <CheckCircle2 size={21} />
