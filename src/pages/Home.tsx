@@ -958,6 +958,104 @@ export function Home() {
           @media (prefers-reduced-motion: reduce) {
             .helix-kinetic-track { animation: none !important; }
           }
+
+          /* V3: tighter, more cinematic product-first composition */
+          .helix-home-main { width: min(1280px, calc(100% - 48px)); }
+          .helix-hero {
+            min-height: 0; gap: 24px; padding: 34px 0 30px !important;
+            grid-template-columns: minmax(0, .94fr) minmax(0, 1.06fr);
+          }
+          .helix-hero h1 { font-size: clamp(52px, 6vw, 86px); line-height: .96; }
+          .helix-hero-description { margin-top: 18px; font-size: 15px; line-height: 1.7; }
+          .helix-hero-search { margin-top: 21px; }
+          .helix-hero-actions { margin-top: 12px; }
+          .helix-hero-visual { min-height: 470px; }
+          .helix-dna-stage { height: 385px; }
+          .helix-network-card { width: 138px; padding: 12px; }
+          .helix-kinetic-band {
+            margin-top: 4px; margin-bottom: 25px; padding: 12px 0;
+          }
+          .helix-trust-strip {
+            margin: 0 0 20px; padding: 13px 19px; border-radius: 6px;
+          }
+          .helix-product-section { padding: 28px 0 36px !important; }
+          .helix-product-heading { margin-bottom: 22px; }
+          .helix-product-heading h2,
+          .helix-usecase-heading h2, .helix-faq-heading h2,
+          .helix-section-heading h2 { font-size: clamp(32px, 4.2vw, 55px); margin-bottom: 10px; }
+          .helix-product-heading > p:last-child,
+          .helix-usecase-heading > p:last-child,
+          .helix-faq-heading > p:last-child { margin: 8px 0 0; font-size: 14px; line-height: 1.6; }
+          .helix-workspace-layout { min-height: 315px; }
+          .helix-workspace-content { padding: 24px; }
+          .helix-workspace-content h3 { margin: 7px 0; }
+          .helix-workspace-tabs { margin: 14px 0; }
+          .helix-preview-card { padding: 13px; }
+          .helix-preview-link { margin-top: 14px; }
+          .helix-lab-showcase { padding: 30px 0 38px !important; }
+          .helix-lab-heading { margin-bottom: 16px; }
+          .helix-lab-heading h2 { font-size: clamp(32px, 4.5vw, 58px); margin-bottom: 8px; }
+          .helix-lab-heading > p:last-child { font-size: 14px; line-height: 1.65; }
+          .helix-home-lab-image img { height: 310px; }
+          .helix-section { padding: 34px 0 !important; }
+          .helix-section-heading { margin-bottom: 18px; }
+          .helix-feature-grid { gap: 12px; }
+          .helix-feature-card { min-height: 205px; padding: 20px; }
+          .helix-feature-card small { margin-top: 14px; }
+          .helix-feature-card h3 { margin: 7px 0; }
+          .helix-layer-section { padding: 45px 0 48px !important; }
+          .helix-layer-intro { margin-bottom: 23px; }
+          .helix-layer-intro h2 { font-size: clamp(45px, 5.7vw, 76px); }
+          .helix-layer-item { padding: 19px 6px; }
+          .helix-layer-item h3 { font-size: clamp(24px, 2.5vw, 35px); }
+          .helix-layer-cta { margin-top: 20px; }
+          .helix-usecase-section { padding: 39px 0 40px !important; }
+          .helix-usecase-heading { margin-bottom: 18px; }
+          .helix-usecase-grid { gap: 12px; }
+          .helix-usecase { padding: 23px; }
+          .helix-usecase h3 { margin-top: 14px; }
+          .helix-flow-section { padding: 36px 0 !important; }
+          .helix-flow-panel { padding: 25px; gap: 22px; }
+          .helix-step { padding: 11px 14px; }
+          .helix-faq-section { padding: 38px 0 42px !important; gap: 35px; }
+          .helix-faq-list details { padding: 15px 0; }
+          .helix-demo-section { padding: 30px 0 48px !important; }
+          .helix-demo-card { padding: 29px; }
+          .helix-home-footer { padding: 20px 0 25px; }
+          /* Decorative interface detail gives the page a designed, editorial rhythm. */
+          .helix-product-heading::before {
+            content: '01 / PRODUCT'; display: block; color: #4c72b2; font-size: 11px;
+            font-weight: 900; letter-spacing: .18em; margin-bottom: 9px;
+          }
+          .helix-lab-heading::before {
+            content: '02 / THE SCIENCE'; display: block; color: #4c72b2; font-size: 11px;
+            font-weight: 900; letter-spacing: .18em; margin-bottom: 8px;
+          }
+          .helix-feature-card:first-child { background-image:
+            radial-gradient(circle at 85% 12%, rgba(61,174,242,.23) 0 1px, transparent 2px),
+            radial-gradient(circle at 70% 58%, rgba(108,201,251,.24) 0 1px, transparent 2px),
+            linear-gradient(140deg,#0b234b,#1f4d91);
+            background-size: 29px 29px, 39px 39px, auto;
+          }
+          .helix-workspace-preview { border-radius: 13px; }
+          .helix-home-lab-image { border-radius: 15px; }
+          @media(max-width: 980px) {
+            .helix-hero { grid-template-columns: 1fr; }
+            .helix-hero-visual { min-height: 410px; }
+            .helix-dna-stage { height: 345px; }
+          }
+          @media(max-width: 650px) {
+            .helix-home-main { width: calc(100% - 32px); }
+            .helix-hero { padding-top: 24px !important; }
+            .helix-hero-visual { min-height: 370px; }
+            .helix-kinetic-band { margin-left: -16px; margin-right: -16px; }
+            .helix-trust-strip { padding: 15px; }
+            .helix-home-lab-image img { height: 230px; }
+            .helix-workspace-content { padding: 17px; }
+            .helix-layer-section { padding: 34px 0 !important; }
+            .helix-usecase-section { padding: 28px 0 !important; }
+            .helix-flow-panel { padding: 20px; }
+          }
           @keyframes helixFadeUp {
             from {
               opacity: 0;
